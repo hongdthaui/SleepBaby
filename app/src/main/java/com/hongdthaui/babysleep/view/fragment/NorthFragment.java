@@ -39,17 +39,8 @@ public class NorthFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final MainActivity activity = (MainActivity) getActivity();
-        final List<Song> songList = new ArrayList<>();
+        final List<Song> songList = activity.musicViewModel.getNorthList();
 
-
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
-        songList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", getContext(), "picachiu"));
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
-        songList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", getContext(), "picachiu"));
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
-        songList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", getContext(), "ghencovy"));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter(songList);
         rvNorthList = view.findViewById(R.id.fragment_north_rv);

@@ -3,6 +3,8 @@ package com.hongdthaui.babysleep;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.animation.ObjectAnimator;
@@ -28,11 +30,13 @@ import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.view.adapter.SongHolder;
+import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
+    public MusicViewModel musicViewModel;
     private ImageButton ibPlay;
     private ImageButton ibNext;
     private ImageButton ibPrev;
@@ -74,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
+        musicViewModel.init(this);
+
         ibPlay = (ImageButton) findViewById(R.id.activity_main_ib_play);
         ibNext = (ImageButton) findViewById(R.id.activity_main_ib_next);
         ibPrev = (ImageButton) findViewById(R.id.activity_main_ib_prev);
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         seekBar = (SeekBar) findViewById(R.id.activity_main_seekBar);
         tvMaxTime = (TextView) findViewById(R.id.activity_main_tv_maxTime);
         tvCurTime = (TextView) findViewById(R.id.activity_main_tv_curTime);
+
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager.setAdapter(pagerAdapter);

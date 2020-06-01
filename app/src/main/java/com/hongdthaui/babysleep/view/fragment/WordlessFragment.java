@@ -37,10 +37,8 @@ public class WordlessFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final MainActivity activity = (MainActivity) getActivity();
-        final List<Song> songList = new ArrayList<>();
-        songList.add(new Song("Mẹ yêu con",R.mipmap.song_icon,"Hiền Thục",getContext(),"wordless1"));
-        songList.add(new Song("Cái cò các vạc",R.mipmap.song_icon,"Anh Thơ",getContext(),"wordless2"));
-        songList.add(new Song("Con cò bé bé",R.mipmap.song_icon,"Hiền Thục",getContext(),"wordless3"));
+        final List<Song> songList = activity.musicViewModel.getWordlessList();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         SongAdapter songAdapter = new SongAdapter(songList);
         rvWordlessList = view.findViewById(R.id.fragment_wordless_rv);
