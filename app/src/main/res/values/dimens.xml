@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_song_name">16sp</dimen>
+    <dimen name="text_size_singer">13sp</dimen>
+    <dimen name="image_width_song_icon">60dp</dimen>
+    <dimen name="image_height_song_icon">60dp</dimen>
+</resources>

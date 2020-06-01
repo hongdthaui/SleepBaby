@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground"
+    android:alpha="100">
+
+    <ImageView
+        android:id="@+id/item_song_iv_icon"
+        android:layout_width="@dimen/image_width_song_icon"
+        android:layout_height="@dimen/image_height_song_icon"
+        android:layout_margin="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/song_icon" />
+
+    <TextView
+        android:id="@+id/item_song_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Mẹ yêu con"
+        android:textSize="@dimen/text_size_song_name"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/item_song_iv_icon"
+        app:layout_constraintTop_toTopOf="@+id/item_song_iv_icon" />
+
+    <TextView
+        android:id="@+id/item_song_tv_singer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Anh Thơ"
+        android:textSize="@dimen/text_size_singer"
+        app:layout_constraintBottom_toBottomOf="@+id/item_song_iv_icon"
+        app:layout_constraintStart_toEndOf="@+id/item_song_iv_icon" />
+
+    <TextView
+        android:id="@+id/item_song_tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5:32"
+        android:textSize="@dimen/text_size_singer"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_song_tv_singer"
+        app:layout_constraintStart_toEndOf="@+id/item_song_tv_singer" />
+</androidx.constraintlayout.widget.ConstraintLayout>
