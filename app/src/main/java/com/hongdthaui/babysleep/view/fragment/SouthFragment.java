@@ -1,12 +1,9 @@
 package com.hongdthaui.babysleep.view.fragment;
 
-import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hongdthaui.babysleep.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
-import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.view.adapter.SongHolder;

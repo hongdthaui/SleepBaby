@@ -353,9 +353,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         }
     }
     public String convertTime(long miniSecond){
-        //long minute = TimeUnit.MILLISECONDS.toMinutes(miniSecond);
-        //long second = TimeUnit.MILLISECONDS.toSeconds(miniSecond);
-
         long minute = miniSecond/60000;
         long second = miniSecond/1000%60;
         if (second<10){

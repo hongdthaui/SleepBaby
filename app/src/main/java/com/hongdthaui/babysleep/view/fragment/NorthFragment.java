@@ -1,7 +1,5 @@
 package com.hongdthaui.babysleep.view.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hongdthaui.babysleep.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
-import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.view.adapter.SongHolder;

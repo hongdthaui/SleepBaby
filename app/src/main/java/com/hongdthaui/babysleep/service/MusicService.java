@@ -28,7 +28,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private IBinder binder = new MusicBinder();
     private boolean shuffle = false;
     private boolean repeat = false;
-    private int duration = 0;
 
     public MusicService() {
 
