@@ -20,13 +20,16 @@ public class MusicViewModel extends ViewModel {
     private List<Song> wordlessList = new ArrayList<>();
     private Context context;
     public MutableLiveData<Boolean> isShuffle = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isRepeat =  new MutableLiveData<>();
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
+    public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
     public MusicViewModel(Context context) {
         this.context = context;
         createNorthList();
         createSouthList();
         createWordlessList();
         isShuffle.setValue(false);
+        isRepeat.setValue(false);
     }
     public void onClickShuffle() {
         Log.e("MUCSIC","onClickShuffle ");
@@ -41,7 +44,16 @@ public class MusicViewModel extends ViewModel {
         }
         //musicService.setShuffle();
     }
-
+    public void onClickRepeat() {
+        if(isRepeat.getValue()){
+            isRepeat.setValue(false);
+            resRepeat.set(R.drawable.ib_repeat_disable);
+        }else {
+            isRepeat.setValue(true);
+            resRepeat.set(R.drawable.ib_repeat_enable);
+        }
+        //musicService.setRepeat();
+    }
     public void createNorthList() {
         northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
         northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));

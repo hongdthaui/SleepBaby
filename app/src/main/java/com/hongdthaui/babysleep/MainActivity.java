@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     private ImageButton ibPlay;
     private ImageButton ibNext;
     private ImageButton ibPrev;
-    private ImageButton ibShuffle;
-    private ImageButton ibRepeat;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private SeekBar seekBar;
@@ -58,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     private boolean isSeek = false;
     private boolean bound = false;
     private boolean isPlay = false;
-    //private boolean isShuffle = false;
-    private boolean isRepeat = false;
     private boolean fisrtPlay = true;
     private Handler threadHandler = new Handler();
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -86,19 +82,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         //musicViewModel.init(getApplicationContext());
         musicViewModel = new MusicViewModel(this);
         activityMainBinding.setMusicViewModel(musicViewModel);
-        musicViewModel.isShuffle.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (musicService!=null&&bound)
-                    musicService.setShuffle();
-            }
-        });
 
+        setUpOnListener();
         ibPlay = (ImageButton) findViewById(R.id.activity_main_ib_play);
         ibNext = (ImageButton) findViewById(R.id.activity_main_ib_next);
         ibPrev = (ImageButton) findViewById(R.id.activity_main_ib_prev);
-        ibRepeat = (ImageButton) findViewById(R.id.activity_main_ib_repeat);
-        //ibShuffle = (ImageButton) findViewById(R.id.activity_main_ib_shuffle);
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
         seekBar = (SeekBar) findViewById(R.id.activity_main_seekBar);
@@ -128,18 +116,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 clickPrev();
             }
         });
-/*        ibShuffle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickShuffle();
-            }
-        });*/
-        ibRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickRepeat();
-            }
-        });
         seekBar.setClickable(true);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -163,29 +139,23 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         });
     }
 
-    private void clickRepeat() {
-        if(isRepeat){
-            isRepeat = false;
-            ibRepeat.setImageResource(R.drawable.ib_repeat_disable);
-        }else {
-            isRepeat = true;
-            ibRepeat.setImageResource(R.drawable.ib_repeat_enable);
-        }
-        musicService.setRepeat();
+    private void setUpOnListener() {
+        musicViewModel.isShuffle.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (musicService!=null&&bound)
+                    musicService.setShuffle();
+            }
+        });
+        musicViewModel.isRepeat.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (musicService!=null&&bound)
+                    musicService.setRepeat();
+            }
+        });
     }
 
-/*
-    private void clickShuffle() {
-        if(isShuffle){
-            isShuffle = false;
-            ibShuffle.setImageResource(R.drawable.ib_shuffle_disable);
-        }else {
-            isShuffle = true;
-            ibShuffle.setImageResource(R.drawable.ib_shuffle_enable);
-        }
-        musicService.setShuffle();
-    }
-*/
 
     public void clickPlay(){
         if (songList==null){
@@ -240,9 +210,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     }
 
-    public MusicService getMusicService() {
-        return musicService;
-    }
 
     public void setSongList(List<Song> songList) {
         this.songList = songList;
