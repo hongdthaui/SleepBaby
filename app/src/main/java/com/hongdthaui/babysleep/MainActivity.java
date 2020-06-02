@@ -16,6 +16,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
@@ -78,12 +79,14 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         super.onCreate(savedInstanceState);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         //setContentView(R.layout.activity_main);
-        //musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
-        //musicViewModel.init(getApplicationContext());
-        musicViewModel = new MusicViewModel(this);
+        //musicViewModel = new MusicViewModel(this);
+        musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
         activityMainBinding.setMusicViewModel(musicViewModel);
 
-        setUpOnListener();
+
+
+
+
         ibPlay = (ImageButton) findViewById(R.id.activity_main_ib_play);
         ibNext = (ImageButton) findViewById(R.id.activity_main_ib_next);
         ibPrev = (ImageButton) findViewById(R.id.activity_main_ib_prev);
@@ -98,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        setUpOnListener();
+    }
+
+
+    private void setUpOnListener() {
         ibPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,14 +124,13 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 clickPrev();
             }
         });
-        seekBar.setClickable(true);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (isSeek) {
-                  //  Log.e("MUSIC", "progress=" + seekBar.getProgress());
+                    //  Log.e("MUSIC", "progress=" + seekBar.getProgress());
                     seekTo(progress);
-                    tvCurTime.setText(convertTime(progress));
+                    tvCurTime.setText(Song.convertTime(progress));
                 }
             }
 
@@ -137,9 +144,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 isSeek = false;
             }
         });
-    }
-
-    private void setUpOnListener() {
         musicViewModel.isShuffle.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                     musicService.setRepeat();
             }
         });
+
     }
 
 
@@ -165,14 +170,14 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         if(!isPlay) {
             isPlay = true;
             ibPlay.setImageResource(android.R.drawable.ic_media_pause);
-            startOrResumRotation(this.nowRotation);
+            musicViewModel.startOrResumRotation(this.nowRotation);
 
             start();
         }
         else {
             isPlay = false;
             ibPlay.setImageResource(android.R.drawable.ic_media_play);
-            pauseRotation(this.nowRotation);
+            musicViewModel.pauseRotation(this.nowRotation);
             pause();
         }
     }
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 public void onChanged(Song song) {
                     //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
                     SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
-                    activeRotation(songHolder.oaSongIcon);
+                    musicViewModel.activeRotation(songHolder.oaSongIcon);
                 }
             });
         }
@@ -225,12 +230,18 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     protected void onStart() {
         super.onStart();
         if (intent == null) {
-            //Log.e("MUSIC SERVICE", "Playing...");
+            Log.e("MUSIC SERVICE", "Playing...");
             intent = new Intent(MainActivity.this, MusicService.class);
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
             startService(intent);
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
     }
 
     @Override
@@ -313,22 +324,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         return 0;
     }
 
-    public void activeRotation(ObjectAnimator nowRotation) {
-        pauseRotation(this.nowRotation);
-        this.nowRotation = nowRotation;
-        startOrResumRotation(this.nowRotation);
-    }
-    public void pauseRotation(ObjectAnimator animator) {
-        if (animator != null) {
-            animator.pause();
-        }
-    }
-    public void startOrResumRotation(ObjectAnimator animator){
-        if (animator.isPaused())
-            animator.resume();
-        else
-            animator.start();
-    }
     private class UpdateSeekBar implements Runnable{
 
         @Override
@@ -337,19 +332,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 int current = getCurrentPosition();
                 //Log.e("MUSIC","current=="+current);
                 seekBar.setProgress(current);
-                tvCurTime.setText(convertTime(current));
+                tvCurTime.setText(Song.convertTime(current));
             }
             threadHandler.postDelayed(this,500);
-        }
-    }
-    public String convertTime(long miniSecond){
-        long minute = miniSecond/60000;
-        long second = miniSecond/1000%60;
-        if (second<10){
-            return (minute+":0"+second);
-        }
-        else {
-            return (minute + ":" + second);
         }
     }
 }

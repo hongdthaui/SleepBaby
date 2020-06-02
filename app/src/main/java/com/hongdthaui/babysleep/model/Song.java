@@ -45,7 +45,7 @@ public class Song {
         return Long.parseLong(durationStr);
     }
 
-    public String convertTime(long time){
+    public static String convertTime(long time){
         time = time/1000;
         long second = time%60;
         long minute = time/60;

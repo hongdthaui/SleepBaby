@@ -1,20 +1,25 @@
 package com.hongdthaui.babysleep.viewmodel;
 
+import android.animation.ObjectAnimator;
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableInt;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.hongdthaui.babysleep.R;
+import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicViewModel extends ViewModel {
+public class MusicViewModel extends AndroidViewModel {
     private List<Song> northList = new ArrayList<>();
     private List<Song> southList = new ArrayList<>();
     private List<Song> wordlessList = new ArrayList<>();
@@ -23,23 +28,35 @@ public class MusicViewModel extends ViewModel {
     public MutableLiveData<Boolean> isRepeat =  new MutableLiveData<>();
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
     public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
-    public MusicViewModel(Context context) {
-        this.context = context;
+    private ObjectAnimator nowRotation;
+    public MusicViewModel(@NonNull Application application) {
+        super(application);
+        Log.e("MUCSIC","new MusicViewModel ");
+        this.context = application.getApplicationContext();
         createNorthList();
         createSouthList();
         createWordlessList();
         isShuffle.setValue(false);
         isRepeat.setValue(false);
+
     }
+
+    /*    public MusicViewModel(Application application) {
+            super();
+            //super(application);
+
+        }*/
     public void onClickShuffle() {
-        Log.e("MUCSIC","onClickShuffle ");
+
         if(isShuffle.getValue()){
             isShuffle.setValue(false);
 
             resShuffle.set(R.drawable.ib_shuffle_disable);
+            //mainBinding.activityMainIbShuffle.setImageResource(R.drawable.ib_shuffle_disable);
         }else {
             isShuffle.setValue(true);
             resShuffle.set(R.drawable.ib_shuffle_enable);
+            //mainBinding.activityMainIbShuffle.setImageResource(R.drawable.ib_shuffle_enable);
 
         }
         //musicService.setShuffle();
@@ -83,5 +100,22 @@ public class MusicViewModel extends ViewModel {
 
     public List<Song> getWordlessList() {
         return wordlessList;
+    }
+
+    public void activeRotation(ObjectAnimator nowRotation) {
+        pauseRotation(this.nowRotation);
+        this.nowRotation = nowRotation;
+        startOrResumRotation(this.nowRotation);
+    }
+    public void pauseRotation(ObjectAnimator animator) {
+        if (animator != null) {
+            animator.pause();
+        }
+    }
+    public void startOrResumRotation(ObjectAnimator animator){
+        if (animator.isPaused())
+            animator.resume();
+        else
+            animator.start();
     }
 }
