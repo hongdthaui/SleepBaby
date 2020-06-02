@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hongdthaui.babysleep.model.Song;
+import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,10 +25,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private MediaPlayer player;
     private List<Song> listSong;
     private int songPosn;
-    private MutableLiveData<Song> nowSong = new MutableLiveData<>();
+    private Song nowSong;
     private IBinder binder = new MusicBinder();
     private boolean shuffle = false;
     private boolean repeat = false;
+    private MusicViewModel viewModel;
 
     public MusicService() {
 
@@ -36,14 +38,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("MUSIC","onBind Service");
+        //Log.e("MUSIC","onBind Service");
 
         return binder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.e("MUSIC","onUnbind Service");
+       // Log.e("MUSIC","onUnbind Service");
 
         //player.stop();
        // player.release();
@@ -53,7 +55,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e("MUSIC","onCreate Service");
+        //Log.e("MUSIC","onCreate Service");
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
@@ -71,10 +73,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (player.getCurrentPosition() == 0) {
+        //if (mp.getCurrentPosition() == 0) {
             mp.reset();
             playNext();
-        }
+       // }
     }
 
     @Override
@@ -94,15 +96,24 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public int getIndexSong() {
         return songPosn;
     }
-    public MutableLiveData<Song> getNowSong() {
+    public Song getNowSong() {
         return nowSong;
     }
 
+    public void setViewModel(MusicViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    public MusicViewModel getViewModel() {
+        return viewModel;
+    }
+
+
     public void playSong() {
         player.reset();
-        Log.i("MUSIC", "songPosn=" + songPosn);
+        //Log.i("MUSIC", "songPosn=" + songPosn);
         Song playSong = listSong.get(songPosn);
-        nowSong.setValue(playSong);
+        nowSong=playSong;
         int id = getApplicationContext().getResources().getIdentifier(playSong.raw, "raw", getApplicationContext().getPackageName());
         Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + id);
         Log.i("MUSIC", "data source id=" + id);
@@ -112,7 +123,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             Log.e("MUSIC", "Error setting data source", e);
         }
         player.prepareAsync();
-
+        this.viewModel.activeRotation();
     }
 
     @Override

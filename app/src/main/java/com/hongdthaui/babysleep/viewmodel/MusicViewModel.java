@@ -3,13 +3,19 @@ package com.hongdthaui.babysleep.viewmodel;
 import android.animation.ObjectAnimator;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableChar;
+import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -19,6 +25,7 @@ import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
+import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 
 import java.util.ArrayList;
@@ -26,6 +33,7 @@ import java.util.List;
 
 public class MusicViewModel extends AndroidViewModel {
     public MusicService musicService;
+    public boolean bound = false;
     private List<Song> northList = new ArrayList<>();
     private List<Song> southList = new ArrayList<>();
     private List<Song> wordlessList = new ArrayList<>();
@@ -36,9 +44,17 @@ public class MusicViewModel extends AndroidViewModel {
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
     public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
     public ObservableInt resPlay = new ObservableInt(android.R.drawable.ic_media_play);
+    public ObservableInt progressSeekBar = new ObservableInt(0);
+    public ObservableInt maxSeekBar = new ObservableInt(0);
+    public ObservableField<String> txtCurTime = new ObservableField<>();
+    public ObservableField<String> txtMaxTime = new ObservableField<>();
     private ObjectAnimator nowRotation;
     public List<Song> songList;
     public List<SongAdapter.SongHolder> songHolders;
+    private Song songRotation;
+    private boolean isSeek = false;
+    private Handler threadHandler = new Handler();
+
     public MusicViewModel(@NonNull Application application) {
         super(application);
         Log.e("MUCSIC","new MusicViewModel ");
@@ -49,6 +65,30 @@ public class MusicViewModel extends AndroidViewModel {
         isPlay.setValue(false);
         isShuffle.setValue(false);
         isRepeat.setValue(false);
+
+    }
+    public void onPlay(int index){
+        isPlay.setValue(true);
+        resPlay.set(android.R.drawable.ic_media_pause);
+
+        musicService.setViewModel(this);
+        musicService.setIndexSong(index);
+        musicService.playSong();
+
+/*        if (fisrtPlay){
+            fisrtPlay = false;
+            musicService.getNowSong().observe(, new Observer<Song>() {
+                @Override
+                public void onChanged(Song song) {
+                    //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
+                    SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
+                    activeRotation(songHolder.oaSongIcon);
+                }
+            });
+        }*/
+
+        UpdateSeekBar updateSeekBar = new UpdateSeekBar();
+        threadHandler.postDelayed(updateSeekBar,500);
 
     }
 
@@ -69,7 +109,7 @@ public class MusicViewModel extends AndroidViewModel {
         else {
             isPlay.setValue(false);
             resPlay.set(android.R.drawable.ic_media_play);
-            pauseRotation(this.nowRotation);
+            pauseRotation();
             musicService.pausePlayer();
         }
     }
@@ -104,6 +144,19 @@ public class MusicViewModel extends AndroidViewModel {
         }
         musicService.setRepeat();
     }
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (isSeek) {
+             // Log.e("MUSIC", "progress=" + seekBar.getProgress());
+            musicService.seek(progress);
+            txtCurTime.set(Song.convertTime(progress));
+        }
+    }
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        isSeek = true;
+    }
+    public void onStopTrackingTouch(SeekBar seekBar) {
+                isSeek = false;
+    }
     public void createNorthList() {
         northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
         northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));
@@ -135,14 +188,19 @@ public class MusicViewModel extends AndroidViewModel {
         return wordlessList;
     }
 
-    public void activeRotation(ObjectAnimator nowRotation) {
-        pauseRotation(this.nowRotation);
-        this.nowRotation = nowRotation;
+    public void activeRotation() {
+//        Log.e("MUSIC","songRotation--------------songHolders="+songHolders.size());
+        if (songHolders==null) return;
+        SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
+      //  activeRotation(songHolder.oaSongIcon);
+
+        pauseRotation();
+        this.nowRotation = songHolder.oaSongIcon;
         startOrResumRotation(this.nowRotation);
     }
-    public void pauseRotation(ObjectAnimator animator) {
-        if (animator != null) {
-            animator.pause();
+    public void pauseRotation() {
+        if (this.nowRotation != null) {
+            this.nowRotation.pause();
         }
     }
     public void startOrResumRotation(ObjectAnimator animator){
@@ -156,5 +214,33 @@ public class MusicViewModel extends AndroidViewModel {
         this.songList = songList;
         musicService.setListSong(songList);
     }
+    public int getCurrentPosition() {
+        if (musicService !=null&&bound)
+            return musicService.getPosn();
+        else
+            return 0;
+    }
+    public int getDuration() {
+        if (musicService !=null&&bound)
+            return musicService.getDuration();
+        else
+            return 0;
+    }
 
+    private class UpdateSeekBar implements Runnable{
+
+        @Override
+        public void run() {
+            if (!isSeek) {
+                int current = getCurrentPosition();
+                //Log.e("MUSIC","current=="+current);
+                int total = getDuration();
+                txtMaxTime.set(Song.convertTime(total));
+                progressSeekBar.set(current);
+                maxSeekBar.set(total);
+                txtCurTime.set(Song.convertTime(current));
+            }
+            threadHandler.postDelayed(this,500);
+        }
+    }
 }

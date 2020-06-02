@@ -1,6 +1,7 @@
 package com.hongdthaui.babysleep.view.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class NorthFragment extends Fragment {
 
                 activity.musicViewModel.setSongList(songList);
                 activity.musicViewModel.songHolders=songHolders;
-                activity.onPlay(position);
+                activity.musicViewModel.onPlay(position);
 
 
 

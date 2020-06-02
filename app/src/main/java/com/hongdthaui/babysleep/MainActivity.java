@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -43,28 +44,20 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public MusicViewModel musicViewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private SeekBar seekBar;
-    private TextView tvMaxTime;
-    private TextView tvCurTime;
-
-
 
     private Intent intent;
-    private boolean isSeek = false;
-    private boolean bound = false;
-    private boolean fisrtPlay = true;
-    private Handler threadHandler = new Handler();
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder musicBinder = (MusicService.MusicBinder) service;
             musicViewModel.musicService = musicBinder.getService();
             //musicService.setListSong(songList);
-            bound = true;
+            musicViewModel.bound = true;
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            bound = false;
+            musicViewModel.bound = false;
         }
     };
 
@@ -80,76 +73,22 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
 
-        seekBar = (SeekBar) findViewById(R.id.activity_main_seekBar);
-        tvMaxTime = (TextView) findViewById(R.id.activity_main_tv_maxTime);
-        tvCurTime = (TextView) findViewById(R.id.activity_main_tv_curTime);
 
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        setUpOnListener();
     }
 
 
-    private void setUpOnListener() {
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (isSeek) {
-                    //  Log.e("MUSIC", "progress=" + seekBar.getProgress());
-                    seekTo(progress);
-                    tvCurTime.setText(Song.convertTime(progress));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                isSeek = true;
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                isSeek = false;
-            }
-        });
-
-
-
-    }
-
-    public void onPlay(int index){
-        musicViewModel.isPlay.setValue(true);
-        musicViewModel.resPlay.set(android.R.drawable.ic_media_pause);
-
-        musicViewModel.musicService.setIndexSong(index);
-        musicViewModel.musicService.playSong();
-
-        if (fisrtPlay){
-            fisrtPlay = false;
-            musicViewModel.musicService.getNowSong().observe(this, new Observer<Song>() {
-                @Override
-                public void onChanged(Song song) {
-                    //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
-                    SongAdapter.SongHolder songHolder = musicViewModel.songHolders.get(musicViewModel.musicService.getIndexSong());
-                    musicViewModel.activeRotation(songHolder.oaSongIcon);
-                }
-            });
-        }
-
-        MainActivity.UpdateSeekBar updateSeekBar = new MainActivity.UpdateSeekBar();
-        threadHandler.postDelayed(updateSeekBar,500);
-
-    }
 
 
     @Override
     protected void onStart() {
         super.onStart();
         if (intent == null) {
-            Log.e("MUSIC SERVICE", "Playing...");
+            //Log.e("MUSIC SERVICE", "Playing...");
             intent = new Intent(MainActivity.this, MusicService.class);
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
             startService(intent);
@@ -181,6 +120,13 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        musicViewModel.activeRotation();
+        //Log.e("MUSIC","onConfigurationChanged");
+    }
+
+    @Override
     public void start() {
         musicViewModel.musicService.go();
     }
@@ -192,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     @Override
     public int getDuration() {
-        if (musicViewModel.musicService !=null&&bound&&musicViewModel.musicService.isPng())
+        if (musicViewModel.musicService !=null&&musicViewModel.bound&&musicViewModel.musicService.isPng())
             return musicViewModel.musicService.getDuration();
          else
             return 0;
@@ -200,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     @Override
     public int getCurrentPosition() {
-        if (musicViewModel.musicService !=null&&bound)
+        if (musicViewModel.musicService !=null&&musicViewModel.bound)
             return musicViewModel.musicService.getPosn();
         else
         return 0;
@@ -213,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     @Override
     public boolean isPlaying() {
-        if (musicViewModel.musicService != null && bound)
+        if (musicViewModel.musicService != null && musicViewModel.bound)
             return musicViewModel.musicService.isPng();
         return false;
     }
@@ -243,20 +189,5 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         return 0;
     }
 
-    private class UpdateSeekBar implements Runnable{
 
-        @Override
-        public void run() {
-            if (!isSeek) {
-                int current = getCurrentPosition();
-                //Log.e("MUSIC","current=="+current);
-                int total = getDuration();
-                seekBar.setMax(total);
-                tvMaxTime.setText(Song.convertTime(total));
-                seekBar.setProgress(current);
-                tvCurTime.setText(Song.convertTime(current));
-            }
-            threadHandler.postDelayed(this,500);
-        }
-    }
 }

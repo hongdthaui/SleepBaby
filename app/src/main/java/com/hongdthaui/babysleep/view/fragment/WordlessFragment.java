@@ -57,7 +57,7 @@ public class WordlessFragment extends Fragment {
 
                 activity.musicViewModel.setSongList(songList);
                 activity.musicViewModel.songHolders=songHolders;
-                activity.onPlay(position);
+                activity.musicViewModel.onPlay(position);
             }
         });
     }
