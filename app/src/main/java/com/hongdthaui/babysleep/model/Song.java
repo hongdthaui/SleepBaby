@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
-import java.io.File;
 
 public class Song {
     public String name;
@@ -16,9 +15,6 @@ public class Song {
 
     public Song() {
     }
-
-    ;
-
     public Song(String name, int icon, String singer, long time, String raw) {
         this.name = name;
         this.icon = icon;
@@ -26,7 +22,6 @@ public class Song {
         this.time = time;
         this.raw = raw;
     }
-
     public Song(String name, int icon, String singer, Context context, String raw) {
         this.name = name;
         this.icon = icon;

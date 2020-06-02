@@ -47,8 +47,6 @@ public class WordlessFragment extends Fragment {
         ItemClickSupport.addTo(rvWordlessList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                //SongHolder songHolder = (SongHolder) recyclerView.findViewHolderForAdapterPosition(position);
-                //activity.activeRotation(songHolder.oaSongIcon);
                 List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
                 for (int i=0;i<songList.size();i++) {
                     SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);

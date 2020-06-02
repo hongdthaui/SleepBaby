@@ -46,11 +46,7 @@ public class SouthFragment extends Fragment {
         ItemClickSupport.addTo(rvSouthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                //SongHolder songHolder = (SongHolder) recyclerView.findViewHolderForAdapterPosition(position);
-               // activity.activeRotation(songHolder.oaSongIcon);
-
                 List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
-
                 for (int i=0;i<songList.size();i++) {
                     SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
                     songHolders.add(songHolder);

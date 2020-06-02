@@ -3,42 +3,28 @@ package com.hongdthaui.babysleep;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.PersistableBundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.MediaController;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.material.tabs.TabLayout;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
-import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
-import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
     public MusicViewModel musicViewModel;
@@ -73,12 +59,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
 
-
-
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
 
@@ -123,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         musicViewModel.activeRotation();
-        //Log.e("MUSIC","onConfigurationChanged");
     }
 
     @Override
@@ -147,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     public int getCurrentPosition() {
         if (musicViewModel.musicService !=null&&musicViewModel.bound)
-            return musicViewModel.musicService.getPosn();
+            return musicViewModel.musicService.getPosition();
         else
         return 0;
     }
@@ -188,6 +170,4 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public int getAudioSessionId() {
         return 0;
     }
-
-
 }

@@ -52,14 +52,10 @@ public class NorthFragment extends Fragment {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
-
                 for (int i=0;i<songList.size();i++) {
                     SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
                     songHolders.add(songHolder);
                 }
-
-                //SongHolder songHolder = (SongHolder) recyclerView.findViewHolderForAdapterPosition(position);
-                //activity.activeRotation(songHolder.oaSongIcon);
 
                 activity.musicViewModel.setSongList(songList);
                 activity.musicViewModel.songHolders=songHolders;
