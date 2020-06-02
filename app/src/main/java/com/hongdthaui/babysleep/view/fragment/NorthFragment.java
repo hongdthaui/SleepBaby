@@ -16,7 +16,6 @@ import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
-import com.hongdthaui.babysleep.view.adapter.SongHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +50,10 @@ public class NorthFragment extends Fragment {
         ItemClickSupport.addTo(rvNorthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                List<SongHolder> songHolders = new ArrayList<>();
+                List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
 
                 for (int i=0;i<songList.size();i++) {
-                    SongHolder songHolder = (SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                    SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
                     songHolders.add(songHolder);
                 }
 

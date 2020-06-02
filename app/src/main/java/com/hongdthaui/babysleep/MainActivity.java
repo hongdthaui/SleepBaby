@@ -32,7 +32,7 @@ import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
-import com.hongdthaui.babysleep.view.adapter.SongHolder;
+import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     private TextView tvCurTime;
     private MusicService musicService;
     private List<Song> songList;
-    private List<SongHolder> songHolders;
+    private List<SongAdapter.SongHolder> songHolders;
     private Intent intent;
     private ObjectAnimator nowRotation;
     private boolean isSeek = false;
@@ -188,8 +188,8 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
         //Log.e("MUSIC SERVICE", "index..."+index);
         Song song = songList.get(index);
-        tvMaxTime.setText(convertTime(song.getTime()));
-        seekBar.setMax((int) song.getTime());
+        tvMaxTime.setText(song.txtTime);
+        seekBar.setMax((int) song.time);
         musicService.setIndexSong(index);
         musicService.playSong();
 
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 @Override
                 public void onChanged(Song song) {
                     //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
-                    SongHolder songHolder = songHolders.get(musicService.getIndexSong());
+                    SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
                     activeRotation(songHolder.oaSongIcon);
                 }
             });
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicService.setListSong(songList);
     }
 
-    public void setSongHolders(List<SongHolder> songHolders) {
+    public void setSongHolders(List<SongAdapter.SongHolder> songHolders) {
         this.songHolders = songHolders;
        // Log.e("MUSIC", "setSongHolders..."+songHolders.size());
     }

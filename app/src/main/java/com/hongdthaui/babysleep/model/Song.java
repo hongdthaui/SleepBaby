@@ -7,11 +7,12 @@ import android.net.Uri;
 import java.io.File;
 
 public class Song {
-    private String name;
-    private int icon;
-    private String singer;
-    private long time;
-    private String raw;
+    public String name;
+    public int icon;
+    public String singer;
+    public long time;
+    public String txtTime;
+    public String raw;
 
     public Song() {
     }
@@ -32,46 +33,7 @@ public class Song {
         this.singer = singer;
         this.raw = raw;
         this.time = getDuration(context);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
-
-    public String getSinger() {
-        return singer;
-    }
-
-    public void setSinger(String singer) {
-        this.singer = singer;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
+        this.txtTime = convertTime(this.time);
     }
 
     public long getDuration(Context context) {
@@ -81,5 +43,15 @@ public class Song {
         mediaMetadataRetriever.setDataSource(context, uri);
         String durationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         return Long.parseLong(durationStr);
+    }
+
+    public String convertTime(long time){
+        time = time/1000;
+        long second = time%60;
+        long minute = time/60;
+        if (second<10) {
+            return String.valueOf(minute) + ":0" + String.valueOf(second);
+        }
+        return String.valueOf(minute) + ":" + String.valueOf(second);
     }
 }

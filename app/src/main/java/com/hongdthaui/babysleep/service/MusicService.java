@@ -98,7 +98,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         Log.i("MUSIC", "songPosn=" + songPosn);
         Song playSong = listSong.get(songPosn);
         nowSong.setValue(playSong);
-        int id = getApplicationContext().getResources().getIdentifier(playSong.getRaw(), "raw", getApplicationContext().getPackageName());
+        int id = getApplicationContext().getResources().getIdentifier(playSong.raw, "raw", getApplicationContext().getPackageName());
         Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + id);
         Log.i("MUSIC", "data source id=" + id);
         try {
