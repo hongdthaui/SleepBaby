@@ -2,6 +2,7 @@ package com.hongdthaui.babysleep;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,6 +16,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     private boolean isSeek = false;
     private boolean bound = false;
     private boolean isPlay = false;
-    private boolean isShuffle = false;
+    //private boolean isShuffle = false;
     private boolean isRepeat = false;
     private boolean fisrtPlay = true;
     private Handler threadHandler = new Handler();
@@ -77,15 +80,25 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
-        musicViewModel.init(this);
+        ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        //musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
+        //musicViewModel.init(getApplicationContext());
+        musicViewModel = new MusicViewModel(this);
+        activityMainBinding.setMusicViewModel(musicViewModel);
+        musicViewModel.isShuffle.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (musicService!=null&&bound)
+                    musicService.setShuffle();
+            }
+        });
 
         ibPlay = (ImageButton) findViewById(R.id.activity_main_ib_play);
         ibNext = (ImageButton) findViewById(R.id.activity_main_ib_next);
         ibPrev = (ImageButton) findViewById(R.id.activity_main_ib_prev);
         ibRepeat = (ImageButton) findViewById(R.id.activity_main_ib_repeat);
-        ibShuffle = (ImageButton) findViewById(R.id.activity_main_ib_shuffle);
+        //ibShuffle = (ImageButton) findViewById(R.id.activity_main_ib_shuffle);
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
         seekBar = (SeekBar) findViewById(R.id.activity_main_seekBar);
@@ -115,12 +128,12 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 clickPrev();
             }
         });
-        ibShuffle.setOnClickListener(new View.OnClickListener() {
+/*        ibShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clickShuffle();
             }
-        });
+        });*/
         ibRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicService.setRepeat();
     }
 
+/*
     private void clickShuffle() {
         if(isShuffle){
             isShuffle = false;
@@ -171,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         }
         musicService.setShuffle();
     }
+*/
 
     public void clickPlay(){
         if (songList==null){

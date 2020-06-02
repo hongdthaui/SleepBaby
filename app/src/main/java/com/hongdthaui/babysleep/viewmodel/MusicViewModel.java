@@ -1,7 +1,11 @@
 package com.hongdthaui.babysleep.viewmodel;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableInt;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.hongdthaui.babysleep.R;
@@ -15,12 +19,27 @@ public class MusicViewModel extends ViewModel {
     private List<Song> southList = new ArrayList<>();
     private List<Song> wordlessList = new ArrayList<>();
     private Context context;
-
-    public void init(Context context) {
+    public MutableLiveData<Boolean> isShuffle = new MutableLiveData<>();
+    public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
+    public MusicViewModel(Context context) {
         this.context = context;
         createNorthList();
         createSouthList();
         createWordlessList();
+        isShuffle.setValue(false);
+    }
+    public void onClickShuffle() {
+        Log.e("MUCSIC","onClickShuffle ");
+        if(isShuffle.getValue()){
+            isShuffle.setValue(false);
+
+            resShuffle.set(R.drawable.ib_shuffle_disable);
+        }else {
+            isShuffle.setValue(true);
+            resShuffle.set(R.drawable.ib_shuffle_enable);
+
+        }
+        //musicService.setShuffle();
     }
 
     public void createNorthList() {

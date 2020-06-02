@@ -95,7 +95,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void playSong() {
         player.reset();
-        Log.i("MUSIC SERVICE", "songPosn=" + songPosn);
+        Log.i("MUSIC", "songPosn=" + songPosn);
         Song playSong = listSong.get(songPosn);
         nowSong.setValue(playSong);
         int id = getApplicationContext().getResources().getIdentifier(playSong.getRaw(), "raw", getApplicationContext().getPackageName());
