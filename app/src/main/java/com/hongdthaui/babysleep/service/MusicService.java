@@ -36,19 +36,24 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.e("MUSIC","onBind Service");
+
         return binder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        player.stop();
-        player.release();
+        Log.e("MUSIC","onUnbind Service");
+
+        //player.stop();
+       // player.release();
         return false;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("MUSIC","onCreate Service");
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
