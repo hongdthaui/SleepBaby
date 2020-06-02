@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
@@ -9,7 +10,6 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
@@ -91,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:onClick="@{()->musicViewModel.onClickRepeat()}"
+                    android:src="@drawable/ib_repeat_disable"
                     app:imageResource="@{musicViewModel.resRepeat}" />
 
                 <ImageButton
@@ -98,6 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="@{()->musicViewModel.onClickPrev()}"
                     app:srcCompat="@android:drawable/ic_media_previous" />
 
                 <ImageButton
@@ -105,6 +107,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="@{()->musicViewModel.onClickPlay()}"
+                    app:imageResource="@{musicViewModel.resPlay}"
                     app:srcCompat="@android:drawable/ic_media_play" />
 
                 <ImageButton
@@ -112,6 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="@{()->musicViewModel.onClickNext()}"
                     app:srcCompat="@android:drawable/ic_media_next" />
 
                 <ImageButton
@@ -120,8 +125,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:onClick="@{()->musicViewModel.onClickShuffle()}"
-                    app:imageResource="@{musicViewModel.resShuffle}"
-                     />
+                    android:src="@drawable/ib_shuffle_disable"
+                    app:imageResource='@{musicViewModel.resShuffle}' />
 
             </LinearLayout>
         </LinearLayout>

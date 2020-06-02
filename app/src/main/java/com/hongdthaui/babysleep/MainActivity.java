@@ -41,30 +41,24 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
     public MusicViewModel musicViewModel;
-    private ImageButton ibPlay;
-    private ImageButton ibNext;
-    private ImageButton ibPrev;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private SeekBar seekBar;
     private TextView tvMaxTime;
     private TextView tvCurTime;
-    private MusicService musicService;
-    private List<Song> songList;
-    private List<SongAdapter.SongHolder> songHolders;
+
+
+
     private Intent intent;
-    private ObjectAnimator nowRotation;
     private boolean isSeek = false;
     private boolean bound = false;
-    private boolean isPlay = false;
     private boolean fisrtPlay = true;
     private Handler threadHandler = new Handler();
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder musicBinder = (MusicService.MusicBinder) service;
-            musicService = musicBinder.getService();
-           // Log.e("MUSIC","songList==="+songList.size());
+            musicViewModel.musicService = musicBinder.getService();
             //musicService.setListSong(songList);
             bound = true;
         }
@@ -83,15 +77,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
         activityMainBinding.setMusicViewModel(musicViewModel);
 
-
-
-
-
-        ibPlay = (ImageButton) findViewById(R.id.activity_main_ib_play);
-        ibNext = (ImageButton) findViewById(R.id.activity_main_ib_next);
-        ibPrev = (ImageButton) findViewById(R.id.activity_main_ib_prev);
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
+
         seekBar = (SeekBar) findViewById(R.id.activity_main_seekBar);
         tvMaxTime = (TextView) findViewById(R.id.activity_main_tv_maxTime);
         tvCurTime = (TextView) findViewById(R.id.activity_main_tv_curTime);
@@ -106,24 +94,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
 
     private void setUpOnListener() {
-        ibPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickPlay();
-            }
-        });
-        ibNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickNext();
-            }
-        });
-        ibPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickPrev();
-            }
-        });
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -144,87 +115,35 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
                 isSeek = false;
             }
         });
-        musicViewModel.isShuffle.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (musicService!=null&&bound)
-                    musicService.setShuffle();
-            }
-        });
-        musicViewModel.isRepeat.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (musicService!=null&&bound)
-                    musicService.setRepeat();
-            }
-        });
+
+
 
     }
 
-
-    public void clickPlay(){
-        if (songList==null){
-            Toast.makeText(this,"Xin mời chọn bài hát",Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(!isPlay) {
-            isPlay = true;
-            ibPlay.setImageResource(android.R.drawable.ic_media_pause);
-            musicViewModel.startOrResumRotation(this.nowRotation);
-
-            start();
-        }
-        else {
-            isPlay = false;
-            ibPlay.setImageResource(android.R.drawable.ic_media_play);
-            musicViewModel.pauseRotation(this.nowRotation);
-            pause();
-        }
-    }
-    public void clickNext(){
-        musicService.playNext();
-    }
-    public void clickPrev(){
-        musicService.playPrev();
-    }
     public void onPlay(int index){
-        isPlay = true;
-        ibPlay.setImageResource(android.R.drawable.ic_media_pause);
+        musicViewModel.isPlay.setValue(true);
+        musicViewModel.resPlay.set(android.R.drawable.ic_media_pause);
 
-        //Log.e("MUSIC SERVICE", "index..."+index);
-        Song song = songList.get(index);
-        tvMaxTime.setText(song.txtTime);
-        seekBar.setMax((int) song.time);
-        musicService.setIndexSong(index);
-        musicService.playSong();
+        musicViewModel.musicService.setIndexSong(index);
+        musicViewModel.musicService.playSong();
 
         if (fisrtPlay){
             fisrtPlay = false;
-            musicService.getNowSong().observe(this, new Observer<Song>() {
+            musicViewModel.musicService.getNowSong().observe(this, new Observer<Song>() {
                 @Override
                 public void onChanged(Song song) {
                     //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
-                    SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
+                    SongAdapter.SongHolder songHolder = musicViewModel.songHolders.get(musicViewModel.musicService.getIndexSong());
                     musicViewModel.activeRotation(songHolder.oaSongIcon);
                 }
             });
         }
 
-        UpdateSeekBar updateSeekBar = new UpdateSeekBar();
+        MainActivity.UpdateSeekBar updateSeekBar = new MainActivity.UpdateSeekBar();
         threadHandler.postDelayed(updateSeekBar,500);
 
     }
 
-
-    public void setSongList(List<Song> songList) {
-        this.songList = songList;
-        musicService.setListSong(songList);
-    }
-
-    public void setSongHolders(List<SongAdapter.SongHolder> songHolders) {
-        this.songHolders = songHolders;
-       // Log.e("MUSIC", "setSongHolders..."+songHolders.size());
-    }
 
     @Override
     protected void onStart() {
@@ -263,39 +182,39 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     @Override
     public void start() {
-        musicService.go();
+        musicViewModel.musicService.go();
     }
 
     @Override
     public void pause() {
-        musicService.pausePlayer();
+        musicViewModel.musicService.pausePlayer();
     }
 
     @Override
     public int getDuration() {
-        if (musicService !=null&&bound&&musicService.isPng())
-            return musicService.getDuration();
+        if (musicViewModel.musicService !=null&&bound&&musicViewModel.musicService.isPng())
+            return musicViewModel.musicService.getDuration();
          else
             return 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        if (musicService !=null&&bound)
-            return musicService.getPosn();
+        if (musicViewModel.musicService !=null&&bound)
+            return musicViewModel.musicService.getPosn();
         else
         return 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        musicService.seek(pos);
+        musicViewModel.musicService.seek(pos);
     }
 
     @Override
     public boolean isPlaying() {
-        if (musicService != null && bound)
-            return musicService.isPng();
+        if (musicViewModel.musicService != null && bound)
+            return musicViewModel.musicService.isPng();
         return false;
     }
 
@@ -331,6 +250,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
             if (!isSeek) {
                 int current = getCurrentPosition();
                 //Log.e("MUSIC","current=="+current);
+                int total = getDuration();
+                seekBar.setMax(total);
+                tvMaxTime.setText(Song.convertTime(total));
                 seekBar.setProgress(current);
                 tvCurTime.setText(Song.convertTime(current));
             }

@@ -60,8 +60,8 @@ public class NorthFragment extends Fragment {
                 //SongHolder songHolder = (SongHolder) recyclerView.findViewHolderForAdapterPosition(position);
                 //activity.activeRotation(songHolder.oaSongIcon);
 
-                activity.setSongList(songList);
-                activity.setSongHolders(songHolders);
+                activity.musicViewModel.setSongList(songList);
+                activity.musicViewModel.songHolders=songHolders;
                 activity.onPlay(position);
 
 
