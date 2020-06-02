@@ -24,6 +24,7 @@ import com.hongdthaui.babysleep.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
+import com.hongdthaui.babysleep.model.SongData;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
@@ -59,9 +60,9 @@ public class MusicViewModel extends AndroidViewModel {
         super(application);
         Log.e("MUCSIC","new MusicViewModel ");
         this.context = application.getApplicationContext();
-        createNorthList();
-        createSouthList();
-        createWordlessList();
+        northList = SongData.createNorthList(context);
+        southList = SongData.createSouthList(context);
+        wordlessList = SongData.createWordlessList(context);
         isPlay.setValue(false);
         isShuffle.setValue(false);
         isRepeat.setValue(false);
@@ -74,19 +75,6 @@ public class MusicViewModel extends AndroidViewModel {
         musicService.setViewModel(this);
         musicService.setIndexSong(index);
         musicService.playSong();
-
-/*        if (fisrtPlay){
-            fisrtPlay = false;
-            musicService.getNowSong().observe(, new Observer<Song>() {
-                @Override
-                public void onChanged(Song song) {
-                    //Log.e("MUSIC", "Playing changed...musicService.getPosn()="+musicService.getIndexSong());
-                    SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
-                    activeRotation(songHolder.oaSongIcon);
-                }
-            });
-        }*/
-
         UpdateSeekBar updateSeekBar = new UpdateSeekBar();
         threadHandler.postDelayed(updateSeekBar,500);
 
@@ -157,25 +145,7 @@ public class MusicViewModel extends AndroidViewModel {
     public void onStopTrackingTouch(SeekBar seekBar) {
                 isSeek = false;
     }
-    public void createNorthList() {
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-    }
-    public void createSouthList() {
-        southList.add(new Song("Mẹ yêu con",R.mipmap.song_icon,"Hiền Thục",context,"south1"));
-        southList.add(new Song("Cái cò các vạc",R.mipmap.song_icon,"Anh Thơ",context,"south2"));
-    }
-    public void createWordlessList() {
-        wordlessList.add(new Song("Mẹ yêu con",R.mipmap.song_icon,"Hiền Thục",context,"wordless1"));
-        wordlessList.add(new Song("Cái cò các vạc",R.mipmap.song_icon,"Anh Thơ",context,"wordless2"));
-        wordlessList.add(new Song("Con cò bé bé",R.mipmap.song_icon,"Hiền Thục",context,"wordless3"));
-    }
+
     public List<Song> getNorthList() {
         return northList;
     }
