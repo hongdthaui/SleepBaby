@@ -10,14 +10,22 @@ import java.util.List;
 public class SongData {
     public static List<Song> createNorthList(Context context) {
         List<Song> northList = new ArrayList<>();
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Pi ca chu", R.mipmap.song_icon, "Anh Thơ", context, "picachiu"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
-        northList.add(new Song("Ghen cô vy", R.mipmap.song_icon, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_1, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Pi ca chu", R.mipmap.ic_song_2, "Anh Thơ", context, "picachiu"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_3, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_4, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_1, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Pi ca chu", R.mipmap.ic_song_2, "Anh Thơ", context, "picachiu"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_3, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_4, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_1, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Pi ca chu", R.mipmap.ic_song_2, "Anh Thơ", context, "picachiu"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_3, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_4, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_1, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Pi ca chu", R.mipmap.ic_song_2, "Anh Thơ", context, "picachiu"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_3, "Hiền Thục", context, "ghencovy"));
+        northList.add(new Song("Ghen cô vy", R.mipmap.ic_song_4, "Hiền Thục", context, "ghencovy"));
         return northList;
     }
     public static List<Song> createSouthList(Context context) {

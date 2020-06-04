@@ -10,7 +10,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBackground"
     android:alpha="100">
 
     <ImageView
@@ -28,9 +27,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/roboto_medium"
         android:text="@{song.name}"
+        android:textColor="#FFFFFF"
         android:textSize="@dimen/text_size_song_name"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:layout_constraintStart_toEndOf="@+id/item_song_iv_icon"
         app:layout_constraintTop_toTopOf="@+id/item_song_iv_icon" />
 
@@ -40,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@{song.singer}"
+        android:textColor="#DFDEDE"
         android:textSize="@dimen/text_size_singer"
         app:layout_constraintBottom_toBottomOf="@+id/item_song_iv_icon"
         app:layout_constraintStart_toEndOf="@+id/item_song_iv_icon" />
@@ -48,10 +51,23 @@
         android:id="@+id/item_song_tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@{song.txtTime}"
-        android:textSize="@dimen/text_size_singer"
         android:layout_marginLeft="15dp"
+        android:text="@{song.txtTime}"
+        android:textColor="#DFDEDE"
+        android:textSize="@dimen/text_size_singer"
         app:layout_constraintBottom_toBottomOf="@+id/item_song_tv_singer"
         app:layout_constraintStart_toEndOf="@+id/item_song_tv_singer" />
+
+    <ImageView
+        android:id="@+id/item_song_iv_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorBackground"
+        app:layout_constraintTop_toBottomOf="@+id/item_song_iv_icon"
+        tools:layout_editor_absoluteX="0dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
