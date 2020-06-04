@@ -2,6 +2,8 @@ package com.hongdthaui.babysleep;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -12,11 +14,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.MediaController;
+import android.widget.TabWidget;
 
 
 import com.google.android.material.tabs.TabLayout;
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public MusicViewModel musicViewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ConstraintLayout constraintLayout;
 
     private Intent intent;
 
@@ -56,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
         activityMainBinding.setMusicViewModel(musicViewModel);
 
+        Toolbar toolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+
+
+        constraintLayout = (ConstraintLayout) findViewById(R.id.constraintLayout);
         viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
         tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
 
@@ -106,6 +117,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         musicViewModel.activeRotation();
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            constraintLayout.setBackground(getDrawable(R.drawable.bg_land));
+        } else {
+            constraintLayout.setBackground(getDrawable(R.drawable.bg));
+        }
     }
 
     @Override
