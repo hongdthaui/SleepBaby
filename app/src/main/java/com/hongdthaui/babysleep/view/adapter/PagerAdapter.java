@@ -42,5 +42,21 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 3;
     }
-
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        String title = "";
+        switch (position){
+            case 0:
+                title = context.getString(R.string.tab_1);
+                break;
+            case 1:
+                title = context.getString(R.string.tab_2);
+                break;
+            case 2:
+                title = context.getString(R.string.tab_3);
+                break;
+        }
+        return title;
+    }
 }
