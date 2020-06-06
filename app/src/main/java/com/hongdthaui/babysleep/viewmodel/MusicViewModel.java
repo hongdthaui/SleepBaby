@@ -25,7 +25,7 @@ import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import java.util.List;
 
 public class MusicViewModel extends AndroidViewModel {
-    public MusicService musicService;
+    public static MusicService MUSIC_SERVICE;
     private Context context;
 
     public List<Song> songList;
@@ -48,7 +48,6 @@ public class MusicViewModel extends AndroidViewModel {
 
     private ObjectAnimator nowRotation;
     private Handler threadHandler = new Handler();
-
     public MusicViewModel(@NonNull Application application) {
         super(application);
         context = application.getApplicationContext();
@@ -61,9 +60,9 @@ public class MusicViewModel extends AndroidViewModel {
         isPlay = true;
         resPlay.set(android.R.drawable.ic_media_pause);
 
-        musicService.setViewModel(this);
-        musicService.setIndexSong(index);
-        musicService.playSong();
+        MUSIC_SERVICE.setViewModel(this);
+        MUSIC_SERVICE.setIndexSong(index);
+        MUSIC_SERVICE.playSong();
 
         UpdateSeekBar updateSeekBar = new UpdateSeekBar();
         threadHandler.postDelayed(updateSeekBar, 500);
@@ -78,36 +77,42 @@ public class MusicViewModel extends AndroidViewModel {
             isPlay = true;
             resPlay.set(android.R.drawable.ic_media_pause);
             startOrResumRotation(this.nowRotation);
-            musicService.go();
+            MUSIC_SERVICE.go();
         } else {
             isPlay = false;
             resPlay.set(android.R.drawable.ic_media_play);
             pauseRotation(nowRotation);
-            musicService.pausePlayer();
+            MUSIC_SERVICE.pausePlayer();
         }
     }
 
     public void onClickPrev() {
-        musicService.playPrev();
+        if (songList == null) {
+            return;
+        }
+        MUSIC_SERVICE.playPrev();
     }
 
     public void onClickNext() {
-        musicService.playNext();
+        if (songList == null) {
+            return;
+        }
+        MUSIC_SERVICE.playNext();
     }
 
     public void onClickShuffle() {
-        resShuffle.set(musicService.isShuffle() ? R.drawable.ib_shuffle_disable : R.drawable.ib_shuffle_enable);
-        musicService.setShuffle();
+        resShuffle.set(MUSIC_SERVICE.isShuffle().getValue() ? R.drawable.ib_shuffle_disable : R.drawable.ib_shuffle_enable);
+        MUSIC_SERVICE.setShuffle();
     }
 
     public void onClickRepeat() {
-        resRepeat.set(musicService.isRepeat()?R.drawable.ib_repeat_disable:R.drawable.ib_repeat_enable);
-        musicService.setRepeat();
+        resRepeat.set(MUSIC_SERVICE.isRepeat().getValue()?R.drawable.ib_repeat_disable:R.drawable.ib_repeat_enable);
+        MUSIC_SERVICE.setRepeat();
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (isSeek) {
-            musicService.seek(progress);
+            MUSIC_SERVICE.seek(progress);
             txtCurTime.set(Song.convertTime(progress));
         }
     }
@@ -133,8 +138,10 @@ public class MusicViewModel extends AndroidViewModel {
     }
 
     public void activeRotation() {
+       // Log.e("MUSIC","activeRotation");
         if (songHolders == null) return;
-        SongAdapter.SongHolder songHolder = songHolders.get(musicService.getIndexSong());
+       // Log.e("MUSIC","songHolders=="+songHolders.size());
+        SongAdapter.SongHolder songHolder = songHolders.get(MUSIC_SERVICE.getIndexSong());
 
         pauseRotation(this.nowRotation);
         this.nowRotation = songHolder.oaSongIcon;
@@ -156,19 +163,19 @@ public class MusicViewModel extends AndroidViewModel {
 
     public void setSongList(List<Song> songList) {
         this.songList = songList;
-        musicService.setListSong(songList);
+        MUSIC_SERVICE.setListSong(songList);
     }
 
     public int getCurrentPosition() {
-        if (musicService != null && bound)
-            return musicService.getPosition();
+        if (MUSIC_SERVICE != null && bound)
+            return MUSIC_SERVICE.getPosition();
         else
             return 0;
     }
 
     public int getDuration() {
-        if (musicService != null && bound)
-            return musicService.getDuration();
+        if (MUSIC_SERVICE != null && bound)
+            return MUSIC_SERVICE.getDuration();
         else
             return 0;
     }
