@@ -1,5 +1,7 @@
 package com.hongdthaui.babysleep.viewmodel;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Application;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -13,6 +15,7 @@ import androidx.lifecycle.Observer;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
+import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 
 import static com.hongdthaui.babysleep.viewmodel.MusicViewModel.MUSIC_SERVICE;
 
@@ -62,13 +65,18 @@ public class PlayerViewModel extends AndroidViewModel {
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (isSeek) {
+            getMusicService().seek(progress);
+            txtCurTime.set(Song.convertTime(progress));
+        }
     }
 
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        isSeek = true;
     }
 
-    public void onStopTrackingTouch(SeekBar seekBar){
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        isSeek = false;
     }
 
     public void onChangedPlay(Boolean aBoolean) {
@@ -97,4 +105,33 @@ public class PlayerViewModel extends AndroidViewModel {
     public MusicService getMusicService() {
         return MUSIC_SERVICE;
     }
+/*    oaSongIcon = ObjectAnimator.ofFloat(itemSongBinding.itemSongIvIcon,"rotation",0f,90f);
+            oaSongIcon.setDuration(5000);
+            oaSongIcon.setRepeatCount(ValueAnimator.INFINITE);
+            oaSongIcon.setRepeatMode(ValueAnimator.RESTART);
+            oaSongIcon.setInterpolator(new LinearInterpolator());*/
+/*    public void activeRotation() {
+        // Log.e("MUSIC","activeRotation");
+        if (songHolders == null) return;
+        // Log.e("MUSIC","songHolders=="+songHolders.size());
+        SongAdapter.SongHolder songHolder = songHolders.get(MUSIC_SERVICE.getIndexSong());
+
+        pauseRotation(this.nowRotation);
+        this.nowRotation = songHolder.oaSongIcon;
+        startOrResumRotation(this.nowRotation);
+    }
+
+    public void pauseRotation(ObjectAnimator animator) {
+        if (animator != null) {
+            animator.pause();
+        }
+    }
+
+    public void startOrResumRotation(ObjectAnimator animator) {
+        if (animator.isPaused())
+            animator.resume();
+        else
+            animator.start();
+    }*/
+
 }
