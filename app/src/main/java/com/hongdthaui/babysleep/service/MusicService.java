@@ -26,8 +26,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private List<Song> listSong;
     private int indexSong;
     private IBinder binder = new MusicBinder();
-    private boolean shuffle = false;
-    private boolean repeat = false;
+    private MutableLiveData<Boolean> playing = new MutableLiveData<>();
+    private MutableLiveData<Boolean> shuffle = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> repeat = new MutableLiveData<>(false);
+    private MutableLiveData<Integer> duration = new MutableLiveData<>();
+    private MutableLiveData<Integer> position = new MutableLiveData<>();
     private MusicViewModel viewModel;
 
     public MusicService() {
@@ -65,11 +68,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     }
 
-    @Override
+/*    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //  playSong();
         return START_STICKY;
-    }
+    }*/
     @Override
     public void onCompletion(MediaPlayer mp) {
         //if (mp.getCurrentPosition() == 0) {
@@ -119,11 +122,13 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        playing.setValue(player.isPlaying());
+        duration.setValue(mp.getDuration());
     }
 
     public void playNext() {
-        if (!repeat) {
-            if (shuffle) {
+        if (!repeat.getValue()) {
+            if (shuffle.getValue()) {
                 Random ran = new Random();
                 int nextSong = indexSong;
                 while (nextSong == indexSong) {
@@ -147,31 +152,33 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void setShuffle() {
-        shuffle = !shuffle;
+        shuffle.setValue(!shuffle.getValue());;
     }
-    public boolean isShuffle(){
+    public MutableLiveData<Boolean> isShuffle(){
         return shuffle;
     }
     public void setRepeat() {
-        repeat = !repeat;
+        repeat.setValue(!repeat.getValue());
     }
-    public boolean isRepeat(){
+    public MutableLiveData<Boolean> isRepeat(){
         return repeat;
     }
-    public int getPosition() {
-        return player.getCurrentPosition();
+    public MutableLiveData<Integer> getPosition() {
+        position.setValue(player.getCurrentPosition());
+        return position;
     }
 
-    public int getDuration() {
-        return player.getDuration();
+    public MutableLiveData<Integer> getDuration() {
+        return duration;
     }
 
-    public boolean isPng() {
-        return player.isPlaying();
+    public MutableLiveData<Boolean> isPlaying() {
+        return playing;
     }
 
     public void pausePlayer() {
         player.pause();
+        playing.setValue(player.isPlaying());
     }
 
     public void seek(int posn) {
@@ -180,6 +187,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void go() {
         player.start();
+        playing.setValue(player.isPlaying());
     }
 
     public class MusicBinder extends Binder {

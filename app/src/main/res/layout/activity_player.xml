@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="playerViewModel"
+            type="com.hongdthaui.babysleep.viewmodel.PlayerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_player"
+        tools:context=".view.activity.PlayerActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/colorPrimaryTransparent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_player_tv_curTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{playerViewModel.txtCurTime}"
+                    android:textColor="@color/design_default_color_background" />
+
+                <SeekBar
+                    android:id="@+id/activity_player_seekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:clickable="true"
+                    android:max="@{playerViewModel.maxSeekBar}"
+                    android:onProgressChanged="@{playerViewModel.onProgressChanged}"
+                    android:onStopTrackingTouch="@{playerViewModel.onStopTrackingTouch}"
+                    android:onStartTrackingTouch="@{playerViewModel.onStartTrackingTouch}"
+                    android:progress="@{playerViewModel.progressSeekBar}"
+                    android:progressBackgroundTint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/activity_player_tv_maxTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{playerViewModel.txtMaxTime}"
+                    android:textColor="@color/design_default_color_background" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/activity_player_ib_repeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="@{()->playerViewModel.onClickRepeat()}"
+                    android:src="@drawable/ib_repeat_disable"
+                    app:imageResource="@{playerViewModel.resRepeat}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/activity_player_ib_prev"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button"
+                    android:onClick="@{()->playerViewModel.onClickPrev()}"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/activity_player_ib_play"
+                    app:layout_constraintStart_toEndOf="@+id/activity_player_ib_repeat"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_media_previous" />
+
+                <ImageButton
+                    android:id="@+id/activity_player_ib_play"
+                    android:layout_width="80dp"
+                    android:layout_height="55dp"
+                    android:background="@drawable/button"
+                    android:onClick="@{()->playerViewModel.onClickPlay()}"
+                    android:scaleType="fitCenter"
+                    app:imageResource="@{playerViewModel.resPlay}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_media_play" />
+
+                <ImageButton
+                    android:id="@+id/activity_player_ib_next"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button"
+                    android:onClick="@{()->playerViewModel.onClickNext()}"
+                    android:scaleType="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/activity_player_ib_shuffle"
+                    app:layout_constraintStart_toEndOf="@+id/activity_player_ib_play"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_media_next" />
+
+                <ImageButton
+                    android:id="@+id/activity_player_ib_shuffle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:background="@android:color/transparent"
+                    android:onClick="@{()->playerViewModel.onClickShuffle()}"
+                    android:src="@drawable/ib_shuffle_disable"
+                    app:imageResource='@{playerViewModel.resShuffle}'
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
