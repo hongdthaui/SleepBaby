@@ -23,10 +23,14 @@ import android.widget.MediaController;
 
 import com.google.android.material.tabs.TabLayout;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
+import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.activity.PlayerActivity;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
+
+import java.util.List;
+
 import static com.hongdthaui.babysleep.viewmodel.MusicViewModel.MUSIC_SERVICE;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
@@ -37,19 +41,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     private Intent intent;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder musicBinder = (MusicService.MusicBinder) service;
-            MUSIC_SERVICE = musicBinder.getService();
-            //musicService.setListSong(songList);
-            musicViewModel.bound = true;
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            musicViewModel.bound = false;
-        }
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +57,17 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         setSupportActionBar(toolbar);
 
 
-        constraintLayout = (ConstraintLayout) findViewById(R.id.constraintLayout);
-        viewPager = (ViewPager) findViewById(R.id.activity_main_viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.activity_main_tabLayout);
+        constraintLayout = findViewById(R.id.constraintLayout);
+        viewPager = findViewById(R.id.activity_main_viewPager);
+        tabLayout = findViewById(R.id.activity_main_tabLayout);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
-    public void onPlay(){
+    public void onPlay(int curSong, List<Song> songList){
+        musicViewModel.setSongList(songList);
+        musicViewModel.onPlay(curSong);
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
     }
@@ -83,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         if (intent == null) {
             //Log.e("MUSIC SERVICE", "Playing...");
             intent = new Intent(MainActivity.this, MusicService.class);
-            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(intent, musicViewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
             //startService(intent);
         }
 
@@ -92,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(serviceConnection);
+        unbindService(musicViewModel.getServiceConnection());
     }
 
     @Override
@@ -115,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        musicViewModel.activeRotation();
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             constraintLayout.setBackground(getDrawable(R.drawable.bg_land));
         } else {
@@ -125,39 +118,39 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
 
     @Override
     public void start() {
-        MUSIC_SERVICE.go();
+        musicViewModel.getMusicService().go();
     }
 
     @Override
     public void pause() {
-        MUSIC_SERVICE.pausePlayer();
+        musicViewModel.getMusicService().pausePlayer();
     }
 
     @Override
     public int getDuration() {
-        if (MUSIC_SERVICE !=null&&musicViewModel.bound&&MUSIC_SERVICE.isPlaying().getValue())
-            return MUSIC_SERVICE.getDuration();
+        if (musicViewModel.getMusicService() !=null&&musicViewModel.isBound()&&musicViewModel.getMusicService().isPlaying().getValue())
+            return musicViewModel.getMusicService().getDuration().getValue();
          else
             return 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        if (MUSIC_SERVICE !=null&&musicViewModel.bound)
-            return MUSIC_SERVICE.getPosition();
+        if (musicViewModel.getMusicService() !=null&&musicViewModel.isBound())
+            return musicViewModel.getMusicService().getPosition().getValue();
         else
         return 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        MUSIC_SERVICE.seek(pos);
+        musicViewModel.getMusicService().seek(pos);
     }
 
     @Override
     public boolean isPlaying() {
-        if (MUSIC_SERVICE != null && musicViewModel.bound)
-            return MUSIC_SERVICE.isPlaying().getValue();
+        if (musicViewModel.getMusicService() != null && musicViewModel.isBound())
+            return musicViewModel.getMusicService().isPlaying().getValue();
         return false;
     }
 

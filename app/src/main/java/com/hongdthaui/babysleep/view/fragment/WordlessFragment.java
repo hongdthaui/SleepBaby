@@ -47,15 +47,7 @@ public class WordlessFragment extends Fragment {
         ItemClickSupport.addTo(rvWordlessList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
-                for (int i=0;i<songList.size();i++) {
-                    SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
-                    songHolders.add(songHolder);
-                }
-
-                activity.musicViewModel.setSongList(songList);
-                activity.musicViewModel.songHolders=songHolders;
-                activity.musicViewModel.onPlay(position);
+                activity.onPlay(position,songList);
             }
         });
     }

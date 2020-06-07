@@ -31,7 +31,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private MutableLiveData<Boolean> repeat = new MutableLiveData<>(false);
     private MutableLiveData<Integer> duration = new MutableLiveData<>();
     private MutableLiveData<Integer> position = new MutableLiveData<>();
-    private MusicViewModel viewModel;
 
     public MusicService() {
 
@@ -99,10 +98,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         return indexSong;
     }
 
-    public void setViewModel(MusicViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
-
     public void playSong() {
         player.reset();
         //Log.i("MUSIC", "songPosn=" + songPosn);
@@ -116,7 +111,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             Log.e("MUSIC", "Error setting data source", e);
         }
         player.prepareAsync();
-        this.viewModel.activeRotation();
     }
 
     @Override

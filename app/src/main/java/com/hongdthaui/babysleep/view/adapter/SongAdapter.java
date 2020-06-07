@@ -2,6 +2,7 @@ package com.hongdthaui.babysleep.view.adapter;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -43,17 +44,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     public class SongHolder extends RecyclerView.ViewHolder {
 
         public ItemSongBinding itemSongBinding;
-        public ObjectAnimator oaSongIcon;
 
         public SongHolder(@NonNull ItemSongBinding itemSongBinding) {
             super(itemSongBinding.getRoot());
             this.itemSongBinding = itemSongBinding;
-
-            oaSongIcon = ObjectAnimator.ofFloat(itemSongBinding.itemSongIvIcon,"rotation",0f,360f);
-            oaSongIcon.setDuration(5000);
-            oaSongIcon.setRepeatCount(ValueAnimator.INFINITE);
-            oaSongIcon.setRepeatMode(ValueAnimator.RESTART);
-            oaSongIcon.setInterpolator(new LinearInterpolator());
         }
 
     }

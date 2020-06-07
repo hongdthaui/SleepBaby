@@ -1,5 +1,6 @@
 package com.hongdthaui.babysleep.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class NorthFragment extends Fragment {
     private RecyclerView rvNorthList;
-
     public NorthFragment() {
 
     }
@@ -35,12 +35,15 @@ public class NorthFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_north, container, false);
     }
 
+
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final MainActivity activity = (MainActivity) getActivity();
         final List<Song> songList = activity.musicViewModel.getNorthList();
-
+       // Log.e("MUSIC","onViewCreated");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter(songList);
         rvNorthList = view.findViewById(R.id.fragment_north_rv);
@@ -51,21 +54,9 @@ public class NorthFragment extends Fragment {
         ItemClickSupport.addTo(rvNorthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
-                for (int i=0;i<songList.size();i++) {
-                    SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
-                    songHolders.add(songHolder);
-                }
-
-                activity.musicViewModel.setSongList(songList);
-                activity.musicViewModel.songHolders=songHolders;
-                activity.musicViewModel.onPlay(position);
-
-
-
+                activity.onPlay(position,songList);
             }
         });
 
     }
-
 }

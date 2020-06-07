@@ -1,5 +1,6 @@
 package com.hongdthaui.babysleep.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,17 +47,7 @@ public class SouthFragment extends Fragment {
         ItemClickSupport.addTo(rvSouthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                List<SongAdapter.SongHolder> songHolders = new ArrayList<>();
-                for (int i=0;i<songList.size();i++) {
-                    SongAdapter.SongHolder songHolder = (SongAdapter.SongHolder) recyclerView.findViewHolderForAdapterPosition(i);
-                    songHolders.add(songHolder);
-                }
-
-                activity.musicViewModel.setSongList(songList);
-                activity.musicViewModel.songHolders=songHolders;
-                activity.musicViewModel.onPlay(position);
-
-
+                activity.onPlay(position,songList);
             }
         });
     }
