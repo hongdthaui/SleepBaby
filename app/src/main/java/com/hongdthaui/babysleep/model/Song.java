@@ -43,10 +43,20 @@ public class Song {
     public static String convertTime(long time){
         time = time/1000;
         long second = time%60;
-        long minute = time/60;
+        long minute = (time/60)%60;
+        long hour = time/3600;
+
+        String secondStr = String.valueOf(second);
+        String minuteStr = String.valueOf(minute);
         if (second<10) {
-            return String.valueOf(minute) + ":0" + String.valueOf(second);
+            secondStr = "0" + second;
         }
-        return String.valueOf(minute) + ":" + String.valueOf(second);
+        if (hour>0){
+            if (minute<10){
+                minuteStr = "0"+minute;
+            }
+            return hour+":"+ minuteStr + ":" + secondStr;
+        }
+        return minuteStr + ":" + secondStr;
     }
 }
