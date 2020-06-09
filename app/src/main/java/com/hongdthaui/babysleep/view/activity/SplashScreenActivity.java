@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.hongdthaui.babysleep.MainActivity;
-
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
