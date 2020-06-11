@@ -16,7 +16,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.Toast;
 
 
 import com.google.android.material.tabs.TabLayout;
@@ -33,9 +36,9 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     public MusicViewModel musicViewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private ConstraintLayout constraintLayout;
     private Boolean firstPlay = true;
     private Intent intent;
+    private LinearLayout llControl;
 
 
 
@@ -49,13 +52,25 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
         activityMainBinding.setMusicViewModel(musicViewModel);
 
-        constraintLayout = findViewById(R.id.constraintLayout);
+        llControl = findViewById(R.id.activity_main_ll_control);
         viewPager = findViewById(R.id.activity_main_viewPager);
         tabLayout = findViewById(R.id.activity_main_tabLayout);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        llControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (firstPlay){
+                    Toast.makeText(MainActivity.this, R.string.notice_no_song, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     public void onPlay(int curSong, List<Song> songList){
         musicViewModel.setSongList(songList);
