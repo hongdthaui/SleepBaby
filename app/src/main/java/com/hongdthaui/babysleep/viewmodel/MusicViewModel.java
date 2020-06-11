@@ -47,7 +47,7 @@ public class MusicViewModel extends AndroidViewModel {
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
 
-    private Handler threadHandler = new Handler();
+    //private Handler threadHandler = new Handler();
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -68,17 +68,15 @@ public class MusicViewModel extends AndroidViewModel {
         northList = SongData.createNorthList(context);
         southList = SongData.createSouthList(context);
         wordlessList = SongData.createWordlessList(context);
+
     }
 
     public void onPlay(int index) {
-        isPlay = true;
-        resPlay.set(android.R.drawable.ic_media_pause);
+        //isPlay = true;
+        //resPlay.set(android.R.drawable.ic_media_pause);
 
         MUSIC_SERVICE.setIndexSong(index);
         MUSIC_SERVICE.playSong();
-
-        UpdateSeekBar updateSeekBar = new UpdateSeekBar();
-        threadHandler.postDelayed(updateSeekBar, 500);
     }
 
     public void onClickPlay() {
@@ -87,12 +85,12 @@ public class MusicViewModel extends AndroidViewModel {
             return;
         }
         if (!isPlay) {
-            isPlay = true;
-            resPlay.set(android.R.drawable.ic_media_pause);
+            //isPlay = true;
+            //resPlay.set(android.R.drawable.ic_media_pause);
             MUSIC_SERVICE.go();
         } else {
-            isPlay = false;
-            resPlay.set(android.R.drawable.ic_media_play);
+            //isPlay = false;
+            //resPlay.set(android.R.drawable.ic_media_play);
             MUSIC_SERVICE.pausePlayer();
         }
     }
@@ -111,12 +109,10 @@ public class MusicViewModel extends AndroidViewModel {
     }
 
     public void onClickShuffle() {
-        resShuffle.set(MUSIC_SERVICE.isShuffle().getValue() ? R.drawable.ib_shuffle_disable : R.drawable.ib_shuffle_enable);
         MUSIC_SERVICE.setShuffle();
     }
 
     public void onClickRepeat() {
-        resRepeat.set(MUSIC_SERVICE.isRepeat().getValue()?R.drawable.ib_repeat_disable:R.drawable.ib_repeat_enable);
         MUSIC_SERVICE.setRepeat();
     }
 
@@ -135,6 +131,28 @@ public class MusicViewModel extends AndroidViewModel {
         isSeek = false;
     }
 
+    public void onChangedPlay(Boolean aBoolean) {
+        isPlay = aBoolean;
+        resPlay.set(aBoolean?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play);
+    }
+
+    public void onChangedRepeat(Boolean aBoolean) {
+        resRepeat.set(aBoolean?R.drawable.ib_repeat_enable:R.drawable.ib_repeat_disable);
+
+    }
+
+    public void onChangedShuffle(Boolean aBoolean) {
+        resShuffle.set(aBoolean ? R.drawable.ib_shuffle_enable : R.drawable.ib_shuffle_disable);
+    }
+    public void onChangedDuration(Integer integer) {
+        maxSeekBar.set(integer);
+        txtMaxTime.set(Song.convertTime(integer));
+    }
+
+    public void onChangedPosition(Integer integer) {
+        progressSeekBar.set(integer);
+        txtCurTime.set(Song.convertTime(integer));
+    }
     public List<Song> getNorthList() {
         return northList;
     }
@@ -178,7 +196,11 @@ public class MusicViewModel extends AndroidViewModel {
         return bound;
     }
 
-    private class UpdateSeekBar implements Runnable {
+/*    private class UpdateSeekBar implements Runnable {
+        int index;
+        public UpdateSeekBar(int index){
+            this.index = index;
+        }
         @Override
         public void run() {
             if (!isSeek) {
@@ -188,8 +210,9 @@ public class MusicViewModel extends AndroidViewModel {
                 progressSeekBar.set(current);
                 maxSeekBar.set(total);
                 txtCurTime.set(Song.convertTime(current));
+                Log.e("MUSIC","UpdateSeekBar run ="+this.index);
             }
             threadHandler.postDelayed(this, 500);
         }
-    }
+    }*/
 }

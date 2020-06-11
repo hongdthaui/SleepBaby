@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -31,7 +32,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private MutableLiveData<Boolean> repeat = new MutableLiveData<>(false);
     private MutableLiveData<Integer> duration = new MutableLiveData<>();
     private MutableLiveData<Integer> position = new MutableLiveData<>();
-
+    private MutableLiveData<Integer> timeOff = new MutableLiveData<>(0);
+    private MutableLiveData<Integer> iconSong = new MutableLiveData<>(0);
+    private boolean isSeek = false;
+    private boolean firstPlay = true;
+    private Handler threadHandler = new Handler();
     public MusicService() {
 
     }
@@ -64,7 +69,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
         indexSong = 0;
-
     }
 
 /*    @Override
@@ -94,14 +98,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void setIndexSong(int indexSong) {
         this.indexSong = indexSong;
     }
-    public int getIndexSong() {
-        return indexSong;
-    }
 
     public void playSong() {
         player.reset();
         //Log.i("MUSIC", "songPosn=" + songPosn);
         Song playSong = listSong.get(indexSong);
+        iconSong.setValue(playSong.icon);
         int id = getApplicationContext().getResources().getIdentifier(playSong.raw, "raw", getApplicationContext().getPackageName());
         Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + id);
         Log.i("MUSIC", "data source id=" + id);
@@ -111,6 +113,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             Log.e("MUSIC", "Error setting data source", e);
         }
         player.prepareAsync();
+        if (firstPlay){
+            MusicService.UpdateSeekBar updateSeekBar = new MusicService.UpdateSeekBar();
+            threadHandler.postDelayed(updateSeekBar, 1000);
+            firstPlay = false;
+        }
     }
 
     @Override
@@ -158,7 +165,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         return repeat;
     }
     public MutableLiveData<Integer> getPosition() {
-        position.setValue(player.getCurrentPosition());
         return position;
     }
 
@@ -168,6 +174,18 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public MutableLiveData<Boolean> isPlaying() {
         return playing;
+    }
+
+    public void setTimeOff(int timeOff) {
+        this.timeOff.setValue(timeOff);
+    }
+
+    public MutableLiveData<Integer> getTimeOff() {
+        return timeOff;
+    }
+
+    public MutableLiveData<Integer> getIconSong() {
+        return iconSong;
     }
 
     public void pausePlayer() {
@@ -183,7 +201,23 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.start();
         playing.setValue(player.isPlaying());
     }
-
+    private class UpdateSeekBar implements Runnable {
+        @Override
+        public void run() {
+            if (!isSeek) {
+                position.setValue(player.getCurrentPosition());
+                //Log.e("MUSIC","UpdateSeekBar run =");
+            }
+            if (timeOff.getValue()>0){
+                timeOff.setValue(timeOff.getValue()-1);
+                if (timeOff.getValue()<=0){
+                    player.pause();
+                    timeOff.setValue(0);
+                }
+            }
+            threadHandler.postDelayed(this, 1000);
+        }
+    }
     public class MusicBinder extends Binder {
         public MusicService getService() {
             return MusicService.this;

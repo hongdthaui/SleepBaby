@@ -1,9 +1,12 @@
 package com.hongdthaui.babysleep.viewmodel;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Application;
+import android.app.TimePickerDialog;
 import android.widget.SeekBar;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,7 +18,10 @@ import androidx.lifecycle.Observer;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
+import com.hongdthaui.babysleep.view.activity.PlayerActivity;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
+
+import java.util.Calendar;
 
 import static com.hongdthaui.babysleep.viewmodel.MusicViewModel.MUSIC_SERVICE;
 
@@ -29,12 +35,13 @@ public class PlayerViewModel extends AndroidViewModel {
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
     public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
     public ObservableInt resPlay = new ObservableInt(android.R.drawable.ic_media_play);
+    public ObservableInt resMoon = new ObservableInt(R.mipmap.ic_song_1);
     public ObservableInt progressSeekBar = new ObservableInt(0);
     public ObservableInt maxSeekBar = new ObservableInt(0);
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
-
-
+    public ObservableField<String> txtAlarm = new ObservableField<>();
+    public AnimatorSet animatorSet;
     public PlayerViewModel(@NonNull Application application) {
         super(application);
     }
@@ -78,10 +85,25 @@ public class PlayerViewModel extends AndroidViewModel {
     public void onStopTrackingTouch(SeekBar seekBar) {
         isSeek = false;
     }
-
+    public void onClickAlarm(int i){
+        getMusicService().setTimeOff(i);
+        Toast.makeText(getApplication().getApplicationContext(),"Set Alarm success",Toast.LENGTH_LONG).show();
+    }
     public void onChangedPlay(Boolean aBoolean) {
         isPlay = aBoolean;
         resPlay.set(aBoolean?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play);
+/*        if (isPlay){
+            if (animatorSet.isPaused()){
+                animatorSet.resume();
+            }
+            else {
+                animatorSet.start();
+            }
+        }
+        else {
+            animatorSet.pause();
+        }*/
+
     }
 
     public void onChangedRepeat(Boolean aBoolean) {
@@ -104,6 +126,22 @@ public class PlayerViewModel extends AndroidViewModel {
     }
     public MusicService getMusicService() {
         return MUSIC_SERVICE;
+    }
+
+    public void onChangedAlarm(Integer integer) {
+        txtAlarm.set(Song.convertTime(integer*1000));
+    }
+
+    public void onChangedIcon(Integer integer) {
+        resMoon.set(integer);
+/*        if (animatorSet.isStarted()){
+            animatorSet.end();
+        }
+        animatorSet.start();*/
+    }
+
+    public void setAnimator(AnimatorSet set) {
+        animatorSet = set;
     }
 /*    oaSongIcon = ObjectAnimator.ofFloat(itemSongBinding.itemSongIvIcon,"rotation",0f,90f);
             oaSongIcon.setDuration(5000);
