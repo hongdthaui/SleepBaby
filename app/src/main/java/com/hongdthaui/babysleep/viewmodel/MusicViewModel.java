@@ -68,13 +68,9 @@ public class MusicViewModel extends AndroidViewModel {
         northList = SongData.createNorthList(context);
         southList = SongData.createSouthList(context);
         wordlessList = SongData.createWordlessList(context);
-
     }
 
     public void onPlay(int index) {
-        //isPlay = true;
-        //resPlay.set(android.R.drawable.ic_media_pause);
-
         MUSIC_SERVICE.setIndexSong(index);
         MUSIC_SERVICE.playSong();
     }
@@ -114,6 +110,9 @@ public class MusicViewModel extends AndroidViewModel {
 
     public void onClickRepeat() {
         MUSIC_SERVICE.setRepeat();
+    }
+    public void onClickControl(){
+
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
