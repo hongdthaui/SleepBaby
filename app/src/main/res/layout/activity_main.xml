@@ -14,40 +14,41 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg"
+        android:background="@drawable/bg_sky"
         android:scaleType="centerCrop"
-        tools:context=".MainActivity">
+        tools:context=".view.activity.MainActivity">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="358dp"
+            android:layout_height="186dp"
+            android:scaleType="fitStart"
+            android:scaleX="-1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/bg_bamboo_la" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/linearLayout">
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-
-                    <androidx.appcompat.widget.Toolbar
-                        android:id="@+id/toolBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="?actionBarSize"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_scrollFlags="scroll|enterAlways" />
+                android:theme="@style/AppTheme.AppBarOverlay">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/activity_main_tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/toolBar"
+                    app:layout_scrollFlags="scroll|enterAlways"
                     app:tabGravity="fill"
                     app:tabTextColor="#ffffff">
+
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,8 +70,9 @@
                 android:id="@+id/activity_main_viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorBackground"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </androidx.viewpager.widget.ViewPager>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
@@ -79,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="76dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimaryTransparent"
+            android:background="@color/colorPrimary"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 

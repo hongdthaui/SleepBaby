@@ -1,4 +1,4 @@
-package com.hongdthaui.babysleep;
+package com.hongdthaui.babysleep.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,39 +6,35 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.MediaController;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
-import com.hongdthaui.babysleep.view.activity.PlayerActivity;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
 
 import java.util.List;
-
-import static com.hongdthaui.babysleep.viewmodel.MusicViewModel.MUSIC_SERVICE;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
     public MusicViewModel musicViewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ConstraintLayout constraintLayout;
-
+    private Boolean firstPlay = true;
     private Intent intent;
 
 
@@ -47,15 +43,11 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
         musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
         activityMainBinding.setMusicViewModel(musicViewModel);
-
-        Toolbar toolbar = findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
-
 
         constraintLayout = findViewById(R.id.constraintLayout);
         viewPager = findViewById(R.id.activity_main_viewPager);
@@ -70,7 +62,45 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         musicViewModel.onPlay(curSong);
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
+        if (firstPlay){
+            setUpListener();
+            firstPlay = false;
+        }
     }
+
+    private void setUpListener() {
+        musicViewModel.getMusicService().isPlaying().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                musicViewModel.onChangedPlay(aBoolean);
+            }
+        });
+        musicViewModel.getMusicService().isRepeat().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                musicViewModel.onChangedRepeat(aBoolean);
+            }
+        });
+        musicViewModel.getMusicService().isShuffle().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                musicViewModel.onChangedShuffle(aBoolean);
+            }
+        });
+        musicViewModel.getMusicService().getDuration().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                musicViewModel.onChangedDuration(integer);
+            }
+        });
+        musicViewModel.getMusicService().getPosition().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                musicViewModel.onChangedPosition(integer);
+            }
+        });
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -80,40 +110,12 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
             bindService(intent, musicViewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
             //startService(intent);
         }
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbindService(musicViewModel.getServiceConnection());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_actions, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_timer:
-                return true;
-            case R.id.menu_about:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintLayout.setBackground(getDrawable(R.drawable.bg_land));
-        } else {
-            constraintLayout.setBackground(getDrawable(R.drawable.bg));
-        }
     }
 
     @Override

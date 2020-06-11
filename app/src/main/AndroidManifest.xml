@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activity.PlayerActivity"></activity>
+        <activity android:name=".view.activity.PlayerActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".view.activity.SplashScreenActivity"
             android:theme="@style/SplashscreenTheme" />
@@ -22,7 +23,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".view.activity.MainActivity"
             android:configChanges="screenSize|orientation|screenLayout|navigation"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

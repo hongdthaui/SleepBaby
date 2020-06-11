@@ -8,16 +8,63 @@
             type="com.hongdthaui.babysleep.viewmodel.PlayerViewModel" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_player_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_player"
+        android:background="@drawable/bg_sky"
         tools:context=".view.activity.PlayerActivity">
 
-        <LinearLayout
+
+        <ImageView
+            android:id="@+id/activity_player_iv_moon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="30dp"
+            app:imageResource="@{playerViewModel.resMoon}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@mipmap/ic_song_1" />
+
+        <ImageView
+            android:id="@+id/activity_player_iv_bamboo"
+            android:layout_width="358dp"
+            android:layout_height="186dp"
+            android:scaleType="fitStart"
+            android:scaleX="-1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/bg_bamboo_la" />
+
+        <ImageView
+            android:id="@+id/activity_player_iv_mountain"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/colorPrimaryTransparent"
+            android:layout_height="45dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:srcCompat="@drawable/bg_mountain" />
+
+        <TextView
+            android:id="@+id/activity_player_tv_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_alarm"
+            android:drawableLeft="@drawable/ic_alarm_enable"
+            android:text="@{playerViewModel.txtAlarm}"
+            android:textColor="@color/design_default_color_background"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/colorPrimary"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -131,5 +178,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
