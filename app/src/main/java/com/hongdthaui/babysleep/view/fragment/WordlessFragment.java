@@ -39,7 +39,7 @@ public class WordlessFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter();
 
-        rvWordlessList = view.findViewById(R.id.fragment_south_rv);
+        rvWordlessList = view.findViewById(R.id.fragment_wordless_rv);
         rvWordlessList.setAdapter(songAdapter);
         rvWordlessList.setLayoutManager(linearLayoutManager);
 
