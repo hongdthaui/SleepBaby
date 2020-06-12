@@ -29,7 +29,7 @@ import static com.hongdthaui.babysleep.viewmodel.MainViewModel.MUSIC_SERVICE;
  * Created by hongdthaui on 6/6/2020.
  */
 public class PlayerViewModel extends AndroidViewModel {
-    public boolean isPlay = false;
+    private boolean isPlay = false;
     private boolean isSeek = false;
 
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
@@ -41,7 +41,7 @@ public class PlayerViewModel extends AndroidViewModel {
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
     public ObservableField<String> txtAlarm = new ObservableField<>();
-    public ObjectAnimator aniMoon;
+    private ObjectAnimator aniMoon;
     public PlayerViewModel(@NonNull Application application) {
         super(application);
     }
@@ -85,9 +85,9 @@ public class PlayerViewModel extends AndroidViewModel {
     public void onStopTrackingTouch(SeekBar seekBar) {
         isSeek = false;
     }
-    public void onClickAlarm(int i){
-        getMusicService().setTimeOff(i);
-        Toast.makeText(getApplication().getApplicationContext(),"Set Alarm success",Toast.LENGTH_LONG).show();
+    public void onClickAlarm(int second){
+        getMusicService().setTimeOff(second);
+        Toast.makeText(getApplication().getApplicationContext(),R.string.alarm_setup_success,Toast.LENGTH_LONG).show();
     }
     public void onChangedPlay(Boolean aBoolean) {
         isPlay = aBoolean;

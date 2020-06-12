@@ -3,7 +3,8 @@
     <string name="tab_1">North</string>
     <string name="tab_2">South</string>
     <string name="tab_3">Wordless</string>
-    <string name="title_alarm">Alarm</string>
+    <string name="alarm_title">Setup Timer</string>
+    <string name="alarm_setup_success">Setup timer success</string>
     <string name="notice_no_song">Please select song!</string>
 
 </resources>

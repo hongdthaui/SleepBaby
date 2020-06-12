@@ -23,7 +23,7 @@ import com.hongdthaui.babysleep.viewmodel.PlayerViewModel;
 public class PlayerActivity extends AppCompatActivity {
     private PlayerViewModel playerViewModel;
     private ActivityPlayerBinding playerBinding;
-    ObjectAnimator aniMoon;
+    private ObjectAnimator aniMoon;
     private int hour = 0;
     private int minutes = 0;
 
@@ -37,12 +37,9 @@ public class PlayerActivity extends AppCompatActivity {
 
         initAlarm();
         initMoon();
-
-
     }
 
     public void initAlarm(){
-
         playerBinding.activityPlayerTvAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +55,7 @@ public class PlayerActivity extends AppCompatActivity {
                 };
                 TimePickerDialog timePickerDialog = new TimePickerDialog(PlayerActivity.this,android.R.style.Theme_Material_Light_Dialog_Alert,
                         onTimeSetListener, hour, minutes, true);
-                timePickerDialog.setTitle(R.string.title_alarm);
+                timePickerDialog.setTitle(R.string.alarm_title);
                 timePickerDialog.show();
             }
         });
@@ -72,6 +69,7 @@ public class PlayerActivity extends AppCompatActivity {
         aniMoon.setDuration(20000);
         aniMoon.setRepeatCount(ValueAnimator.INFINITE);
         aniMoon.setRepeatMode(ValueAnimator.REVERSE);
+
         playerViewModel.setAniMoon(aniMoon);
     }
     @Override
@@ -121,8 +119,4 @@ public class PlayerActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 }

@@ -21,9 +21,8 @@
             android:id="@+id/activity_player_iv_moon"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginBottom="30dp"
             app:imageResource="@{playerViewModel.resMoon}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@mipmap/ic_song_1" />
