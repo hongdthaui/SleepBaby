@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Application;
 import android.app.TimePickerDialog;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -18,12 +19,11 @@ import androidx.lifecycle.Observer;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
-import com.hongdthaui.babysleep.view.activity.PlayerActivity;
-import com.hongdthaui.babysleep.view.adapter.SongAdapter;
+
 
 import java.util.Calendar;
 
-import static com.hongdthaui.babysleep.viewmodel.MusicViewModel.MUSIC_SERVICE;
+import static com.hongdthaui.babysleep.viewmodel.MainViewModel.MUSIC_SERVICE;
 
 /**
  * Created by hongdthaui on 6/6/2020.
@@ -41,7 +41,7 @@ public class PlayerViewModel extends AndroidViewModel {
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
     public ObservableField<String> txtAlarm = new ObservableField<>();
-    public AnimatorSet animatorSet;
+    public ObjectAnimator aniMoon;
     public PlayerViewModel(@NonNull Application application) {
         super(application);
     }
@@ -91,19 +91,18 @@ public class PlayerViewModel extends AndroidViewModel {
     }
     public void onChangedPlay(Boolean aBoolean) {
         isPlay = aBoolean;
-        resPlay.set(aBoolean?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play);
-/*        if (isPlay){
-            if (animatorSet.isPaused()){
-                animatorSet.resume();
+        //resPlay.set(aBoolean?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play);
+        if (isPlay){
+            resPlay.set(android.R.drawable.ic_media_pause);
+            if (aniMoon.isPaused()) {
+                aniMoon.resume();
+            } else {
+                aniMoon.start();
             }
-            else {
-                animatorSet.start();
-            }
+        }else {
+            resPlay.set(android.R.drawable.ic_media_play);
+            aniMoon.pause();
         }
-        else {
-            animatorSet.pause();
-        }*/
-
     }
 
     public void onChangedRepeat(Boolean aBoolean) {
@@ -132,44 +131,11 @@ public class PlayerViewModel extends AndroidViewModel {
         txtAlarm.set(Song.convertTime(integer*1000));
     }
 
-    public void onChangedIcon(Integer integer) {
-        resMoon.set(integer);
-/*        if (animatorSet.isStarted()){
-            animatorSet.end();
-        }
-        animatorSet.start();*/
+    public void onChangedIcon(Integer icon) {
+        resMoon.set(icon);
     }
 
-    public void setAnimator(AnimatorSet set) {
-        animatorSet = set;
+    public void setAniMoon(ObjectAnimator aniMoon) {
+        this.aniMoon = aniMoon;
     }
-/*    oaSongIcon = ObjectAnimator.ofFloat(itemSongBinding.itemSongIvIcon,"rotation",0f,90f);
-            oaSongIcon.setDuration(5000);
-            oaSongIcon.setRepeatCount(ValueAnimator.INFINITE);
-            oaSongIcon.setRepeatMode(ValueAnimator.RESTART);
-            oaSongIcon.setInterpolator(new LinearInterpolator());*/
-/*    public void activeRotation() {
-        // Log.e("MUSIC","activeRotation");
-        if (songHolders == null) return;
-        // Log.e("MUSIC","songHolders=="+songHolders.size());
-        SongAdapter.SongHolder songHolder = songHolders.get(MUSIC_SERVICE.getIndexSong());
-
-        pauseRotation(this.nowRotation);
-        this.nowRotation = songHolder.oaSongIcon;
-        startOrResumRotation(this.nowRotation);
-    }
-
-    public void pauseRotation(ObjectAnimator animator) {
-        if (animator != null) {
-            animator.pause();
-        }
-    }
-
-    public void startOrResumRotation(ObjectAnimator animator) {
-        if (animator.isPaused())
-            animator.resume();
-        else
-            animator.start();
-    }*/
-
 }
