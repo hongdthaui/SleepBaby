@@ -32,7 +32,7 @@ import com.hongdthaui.babysleep.viewmodel.MainViewModel;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
+public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -132,72 +132,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         super.onDestroy();
         unbindService(viewModel.getServiceConnection());
     }
-
     public MainViewModel getViewModel() {
         return viewModel;
     }
-
-    @Override
-    public void start() {
-        viewModel.getMusicService().go();
-    }
-
-    @Override
-    public void pause() {
-        viewModel.getMusicService().pausePlayer();
-    }
-
-    @Override
-    public int getDuration() {
-        if (viewModel.getMusicService() !=null&&viewModel.isBound()&&viewModel.getMusicService().isPlaying().getValue())
-            return viewModel.getMusicService().getDuration().getValue();
-         else
-            return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        if (viewModel.getMusicService() !=null&&viewModel.isBound())
-            return viewModel.getMusicService().getPosition().getValue();
-        else
-        return 0;
-    }
-
-    @Override
-    public void seekTo(int pos) {
-        viewModel.getMusicService().seek(pos);
-    }
-
-    @Override
-    public boolean isPlaying() {
-        if (viewModel.getMusicService() != null && viewModel.isBound())
-            return viewModel.getMusicService().isPlaying().getValue();
-        return false;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
-
 }
