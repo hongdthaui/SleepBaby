@@ -8,16 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hongdthaui.babysleep.MainActivity;
+import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WordlessFragment extends Fragment {
@@ -36,18 +36,24 @@ public class WordlessFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final MainActivity activity = (MainActivity) getActivity();
-        final List<Song> songList = activity.musicViewModel.getWordlessList();
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        SongAdapter songAdapter = new SongAdapter(songList);
-        rvWordlessList = view.findViewById(R.id.fragment_wordless_rv);
+        final SongAdapter songAdapter = new SongAdapter();
+
+        rvWordlessList = view.findViewById(R.id.fragment_south_rv);
         rvWordlessList.setAdapter(songAdapter);
         rvWordlessList.setLayoutManager(linearLayoutManager);
 
+        activity.getViewModel().getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
+            @Override
+            public void onChanged(List<Song> songs) {
+                songAdapter.setSongList(songs);
+                songAdapter.notifyDataSetChanged();
+            }
+        });
         ItemClickSupport.addTo(rvWordlessList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                activity.onPlay(position,songList);
+                activity.onPlay(position,songAdapter.getSongList());
             }
         });
     }

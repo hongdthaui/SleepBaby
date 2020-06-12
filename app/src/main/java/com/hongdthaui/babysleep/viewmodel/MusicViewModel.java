@@ -16,6 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 
 import com.hongdthaui.babysleep.R;
@@ -31,9 +35,9 @@ public class MusicViewModel extends AndroidViewModel {
     private Context context;
 
     private List<Song> songList;
-    private List<Song> northList;
-    private List<Song> southList;
-    private List<Song> wordlessList;
+    private LiveData<List<Song>> northList;
+    private LiveData<List<Song>> southList;
+    private LiveData<List<Song>> wordlessList;
 
     private boolean bound = false;
     private boolean isPlay = false;
@@ -65,9 +69,9 @@ public class MusicViewModel extends AndroidViewModel {
         super(application);
         Log.e("MUSIC","new MusicViewModel");
         context = application.getApplicationContext();
-        northList = SongData.createNorthList(context);
-        southList = SongData.createSouthList(context);
-        wordlessList = SongData.createWordlessList(context);
+        northList = SongData.getNorthList(context);
+        southList = SongData.getSouthList(context);
+        wordlessList = SongData.getWordlessList(context);
     }
 
     public void onPlay(int index) {
@@ -89,6 +93,7 @@ public class MusicViewModel extends AndroidViewModel {
             //resPlay.set(android.R.drawable.ic_media_play);
             MUSIC_SERVICE.pausePlayer();
         }
+
     }
     public void onClickPrev() {
         if (songList == null) {
@@ -152,15 +157,15 @@ public class MusicViewModel extends AndroidViewModel {
         progressSeekBar.set(integer);
         txtCurTime.set(Song.convertTime(integer));
     }
-    public List<Song> getNorthList() {
+    public LiveData<List<Song>> getNorthList() {
         return northList;
     }
 
-    public List<Song> getSouthList() {
+    public LiveData<List<Song>> getSouthList() {
         return southList;
     }
 
-    public List<Song> getWordlessList() {
+    public LiveData<List<Song>> getWordlessList() {
         return wordlessList;
     }
 
@@ -169,19 +174,7 @@ public class MusicViewModel extends AndroidViewModel {
         MUSIC_SERVICE.setListSong(songList);
     }
 
-    public int getCurrentPosition() {
-        if (MUSIC_SERVICE != null && bound)
-            return MUSIC_SERVICE.getPosition().getValue();
-        else
-            return 0;
-    }
 
-    public int getDuration() {
-        if (MUSIC_SERVICE != null && bound)
-            return MUSIC_SERVICE.getDuration().getValue();
-        else
-            return 0;
-    }
 
     public ServiceConnection getServiceConnection() {
         return serviceConnection;
@@ -195,23 +188,4 @@ public class MusicViewModel extends AndroidViewModel {
         return bound;
     }
 
-/*    private class UpdateSeekBar implements Runnable {
-        int index;
-        public UpdateSeekBar(int index){
-            this.index = index;
-        }
-        @Override
-        public void run() {
-            if (!isSeek) {
-                int current = getCurrentPosition();
-                int total = getDuration();
-                txtMaxTime.set(Song.convertTime(total));
-                progressSeekBar.set(current);
-                maxSeekBar.set(total);
-                txtCurTime.set(Song.convertTime(current));
-                Log.e("MUSIC","UpdateSeekBar run ="+this.index);
-            }
-            threadHandler.postDelayed(this, 500);
-        }
-    }*/
 }

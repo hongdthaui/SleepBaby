@@ -19,6 +19,7 @@ import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     private List<Song> songList;
+    public SongAdapter(){}
     public SongAdapter(List<Song> songs){
         this.songList = songs;
     }
@@ -39,7 +40,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
         return songList.size();
     }
 
+    public void setSongList(List<Song> songList) {
+        this.songList = songList;
+    }
 
+    public List<Song> getSongList() {
+        return songList;
+    }
 
     public class SongHolder extends RecyclerView.ViewHolder {
 
