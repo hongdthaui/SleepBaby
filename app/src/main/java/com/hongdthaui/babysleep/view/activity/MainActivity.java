@@ -28,12 +28,12 @@ import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
-import com.hongdthaui.babysleep.viewmodel.MusicViewModel;
+import com.hongdthaui.babysleep.viewmodel.MainViewModel;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MediaController.MediaPlayerControl {
-    public MusicViewModel musicViewModel;
+    private MainViewModel viewModel;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private Boolean firstPlay = true;
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
-        musicViewModel = ViewModelProviders.of(this).get(MusicViewModel.class);
-        activityMainBinding.setMusicViewModel(musicViewModel);
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        activityMainBinding.setViewModel(viewModel);
 
         llControl = findViewById(R.id.activity_main_ll_control);
         viewPager = findViewById(R.id.activity_main_viewPager);
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         });
     }
     public void onPlay(int curSong, List<Song> songList){
-        musicViewModel.setSongList(songList);
-        musicViewModel.onPlay(curSong);
+        viewModel.setSongList(songList);
+        viewModel.onPlay(curSong);
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
         if (firstPlay){
@@ -84,34 +84,34 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     }
 
     private void setUpListener() {
-        musicViewModel.getMusicService().isPlaying().observe(this, new Observer<Boolean>() {
+        viewModel.getMusicService().isPlaying().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                musicViewModel.onChangedPlay(aBoolean);
+                viewModel.onChangedPlay(aBoolean);
             }
         });
-        musicViewModel.getMusicService().isRepeat().observe(this, new Observer<Boolean>() {
+        viewModel.getMusicService().isRepeat().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                musicViewModel.onChangedRepeat(aBoolean);
+                viewModel.onChangedRepeat(aBoolean);
             }
         });
-        musicViewModel.getMusicService().isShuffle().observe(this, new Observer<Boolean>() {
+        viewModel.getMusicService().isShuffle().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                musicViewModel.onChangedShuffle(aBoolean);
+                viewModel.onChangedShuffle(aBoolean);
             }
         });
-        musicViewModel.getMusicService().getDuration().observe(this, new Observer<Integer>() {
+        viewModel.getMusicService().getDuration().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                musicViewModel.onChangedDuration(integer);
+                viewModel.onChangedDuration(integer);
             }
         });
-        musicViewModel.getMusicService().getPosition().observe(this, new Observer<Integer>() {
+        viewModel.getMusicService().getPosition().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                musicViewModel.onChangedPosition(integer);
+                viewModel.onChangedPosition(integer);
             }
         });
     }
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
         if (intent == null) {
             //Log.e("MUSIC SERVICE", "Playing...");
             intent = new Intent(MainActivity.this, MusicService.class);
-            bindService(intent, musicViewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
+            bindService(intent, viewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
             //startService(intent);
         }
     }
@@ -130,44 +130,48 @@ public class MainActivity extends AppCompatActivity implements MediaController.M
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(musicViewModel.getServiceConnection());
+        unbindService(viewModel.getServiceConnection());
+    }
+
+    public MainViewModel getViewModel() {
+        return viewModel;
     }
 
     @Override
     public void start() {
-        musicViewModel.getMusicService().go();
+        viewModel.getMusicService().go();
     }
 
     @Override
     public void pause() {
-        musicViewModel.getMusicService().pausePlayer();
+        viewModel.getMusicService().pausePlayer();
     }
 
     @Override
     public int getDuration() {
-        if (musicViewModel.getMusicService() !=null&&musicViewModel.isBound()&&musicViewModel.getMusicService().isPlaying().getValue())
-            return musicViewModel.getMusicService().getDuration().getValue();
+        if (viewModel.getMusicService() !=null&&viewModel.isBound()&&viewModel.getMusicService().isPlaying().getValue())
+            return viewModel.getMusicService().getDuration().getValue();
          else
             return 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        if (musicViewModel.getMusicService() !=null&&musicViewModel.isBound())
-            return musicViewModel.getMusicService().getPosition().getValue();
+        if (viewModel.getMusicService() !=null&&viewModel.isBound())
+            return viewModel.getMusicService().getPosition().getValue();
         else
         return 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        musicViewModel.getMusicService().seek(pos);
+        viewModel.getMusicService().seek(pos);
     }
 
     @Override
     public boolean isPlaying() {
-        if (musicViewModel.getMusicService() != null && musicViewModel.isBound())
-            return musicViewModel.getMusicService().isPlaying().getValue();
+        if (viewModel.getMusicService() != null && viewModel.isBound())
+            return viewModel.getMusicService().isPlaying().getValue();
         return false;
     }
 

@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="musicViewModel"
-            type="com.hongdthaui.babysleep.viewmodel.MusicViewModel" />
+            name="viewModel"
+            type="com.hongdthaui.babysleep.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{musicViewModel.txtCurTime}"
+                    android:text="@{viewModel.txtCurTime}"
                     android:textColor="@color/design_default_color_background" />
 
                 <SeekBar
@@ -105,11 +105,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     android:clickable="true"
-                    android:max="@{musicViewModel.maxSeekBar}"
-                    android:onProgressChanged="@{musicViewModel.onProgressChanged}"
-                    android:onStopTrackingTouch="@{musicViewModel.onStopTrackingTouch}"
-                    android:onStartTrackingTouch="@{musicViewModel.onStartTrackingTouch}"
-                    android:progress="@{musicViewModel.progressSeekBar}"
+                    android:max="@{viewModel.maxSeekBar}"
+                    android:onProgressChanged="@{viewModel.onProgressChanged}"
+                    android:onStopTrackingTouch="@{viewModel.onStopTrackingTouch}"
+                    android:onStartTrackingTouch="@{viewModel.onStartTrackingTouch}"
+                    android:progress="@{viewModel.progressSeekBar}"
                     android:progressBackgroundTint="#FFFFFF" />
 
                 <TextView
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{musicViewModel.txtMaxTime}"
+                    android:text="@{viewModel.txtMaxTime}"
                     android:textColor="@color/design_default_color_background" />
             </LinearLayout>
 
@@ -133,9 +133,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:background="@android:color/transparent"
-                    android:onClick="@{()->musicViewModel.onClickRepeat()}"
+                    android:onClick="@{()->viewModel.onClickRepeat()}"
                     android:src="@drawable/ib_repeat_disable"
-                    app:imageResource="@{musicViewModel.resRepeat}"
+                    app:imageResource="@{viewModel.resRepeat}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -145,7 +145,7 @@
                     android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:background="@drawable/button"
-                    android:onClick="@{()->musicViewModel.onClickPrev()}"
+                    android:onClick="@{()->viewModel.onClickPrev()}"
                     android:scaleType="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_main_ib_play"
@@ -158,9 +158,9 @@
                     android:layout_width="80dp"
                     android:layout_height="55dp"
                     android:background="@drawable/button"
-                    android:onClick="@{()->musicViewModel.onClickPlay()}"
+                    android:onClick="@{()->viewModel.onClickPlay()}"
                     android:scaleType="fitCenter"
-                    app:imageResource="@{musicViewModel.resPlay}"
+                    app:imageResource="@{viewModel.resPlay}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -172,7 +172,7 @@
                     android:layout_width="60dp"
                     android:layout_height="40dp"
                     android:background="@drawable/button"
-                    android:onClick="@{()->musicViewModel.onClickNext()}"
+                    android:onClick="@{()->viewModel.onClickNext()}"
                     android:scaleType="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_main_ib_shuffle"
@@ -186,9 +186,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
                     android:background="@android:color/transparent"
-                    android:onClick="@{()->musicViewModel.onClickShuffle()}"
+                    android:onClick="@{()->viewModel.onClickShuffle()}"
                     android:src="@drawable/ib_shuffle_disable"
-                    app:imageResource='@{musicViewModel.resShuffle}'
+                    app:imageResource='@{viewModel.resShuffle}'
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

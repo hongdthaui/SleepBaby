@@ -30,7 +30,7 @@ import com.hongdthaui.babysleep.service.MusicService;
 
 import java.util.List;
 
-public class MusicViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
     public static MusicService MUSIC_SERVICE;
     private Context context;
 
@@ -65,7 +65,7 @@ public class MusicViewModel extends AndroidViewModel {
             bound = false;
         }
     };
-    public MusicViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
         Log.e("MUSIC","new MusicViewModel");
         context = application.getApplicationContext();
