@@ -5,20 +5,25 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Application;
 import android.app.TimePickerDialog;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
+import com.hongdthaui.babysleep.utils.MediaUtils;
 
 
 import java.util.Calendar;
@@ -35,7 +40,7 @@ public class PlayerViewModel extends AndroidViewModel {
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
     public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
     public ObservableInt resPlay = new ObservableInt(android.R.drawable.ic_media_play);
-    public ObservableInt resMoon = new ObservableInt(R.mipmap.ic_song_1);
+    public ObservableField<String> resMoon = new ObservableField<>();
     public ObservableInt progressSeekBar = new ObservableInt(0);
     public ObservableInt maxSeekBar = new ObservableInt(0);
     public ObservableField<String> txtCurTime = new ObservableField<>();
@@ -74,7 +79,7 @@ public class PlayerViewModel extends AndroidViewModel {
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (isSeek) {
             getMusicService().seek(progress);
-            txtCurTime.set(Song.convertTime(progress));
+            txtCurTime.set(MediaUtils.convertTime(progress));
         }
     }
 
@@ -116,25 +121,30 @@ public class PlayerViewModel extends AndroidViewModel {
 
     public void onChangedDuration(Integer integer) {
         maxSeekBar.set(integer);
-        txtMaxTime.set(Song.convertTime(integer));
+        txtMaxTime.set(MediaUtils.convertTime(integer));
     }
 
     public void onChangedPosition(Integer integer) {
         progressSeekBar.set(integer);
-        txtCurTime.set(Song.convertTime(integer));
+        txtCurTime.set(MediaUtils.convertTime(integer));
     }
     public MusicService getMusicService() {
         return MUSIC_SERVICE;
     }
 
     public void onChangedAlarm(Integer integer) {
-        txtAlarm.set(Song.convertTime(integer*1000));
+        txtAlarm.set(MediaUtils.convertTime(integer*1000));
     }
 
-    public void onChangedIcon(Integer icon) {
-        resMoon.set(icon);
+    public void onChangedIcon(String iconUrl) {
+        resMoon.set(iconUrl);
     }
-
+    @BindingAdapter("resMoon")
+    public static void loadIconMoon(ImageView view, ObservableField<String> resMoon){
+       Glide.with(view.getContext())
+                .load(resMoon.get())
+                .into(view);
+    }
     public void setAniMoon(ObjectAnimator aniMoon) {
         this.aniMoon = aniMoon;
     }

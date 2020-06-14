@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hongdthaui.babysleep.model.Song;
+import com.hongdthaui.babysleep.model.SongOnline;
+import com.hongdthaui.babysleep.utils.MediaUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.Random;
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private MediaPlayer player;
-    private List<Song> listSong;
+    private List<SongOnline> listSong;
     private int indexSong;
     private IBinder binder = new MusicBinder();
     private MutableLiveData<Boolean> playing = new MutableLiveData<>();
@@ -32,7 +34,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private MutableLiveData<Integer> duration = new MutableLiveData<>();
     private MutableLiveData<Integer> position = new MutableLiveData<>();
     private MutableLiveData<Integer> timeOff = new MutableLiveData<>(0);
-    private MutableLiveData<Integer> iconSong = new MutableLiveData<>(0);
+    private MutableLiveData<String> iconSong = new MutableLiveData<>();
     private boolean isSeek = false;
     private boolean firstPlay = true;
     private Handler threadHandler = new Handler();
@@ -90,7 +92,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
 
-    public void setListSong(List<Song> songs) {
+    public void setListSong(List<SongOnline> songs) {
         this.listSong = songs;
     }
 
@@ -100,16 +102,13 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void playSong() {
         player.reset();
-        //Log.i("MUSIC", "songPosn=" + songPosn);
-        Song playSong = listSong.get(indexSong);
-        iconSong.setValue(playSong.icon);
-        int id = getApplicationContext().getResources().getIdentifier(playSong.raw, "raw", getApplicationContext().getPackageName());
-        Uri uri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + id);
-        Log.i("MUSIC", "data source id=" + id);
+        //Log.i(MediaUtils.LOG_TAG, "songPosn=" + songPosn);
+        SongOnline playSong = listSong.get(indexSong);
+        iconSong.setValue(playSong.iconUrl);
         try {
-            player.setDataSource(getApplicationContext(), uri);
+            player.setDataSource(playSong.audioUrl);
         } catch (IOException e) {
-            Log.e("MUSIC", "Error setting data source", e);
+            Log.e(MediaUtils.LOG_TAG, "Error setting data source", e);
         }
         player.prepareAsync();
         if (firstPlay){
@@ -183,7 +182,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         return timeOff;
     }
 
-    public MutableLiveData<Integer> getIconSong() {
+    public MutableLiveData<String> getIconSong() {
         return iconSong;
     }
 
@@ -205,7 +204,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         public void run() {
             if (!isSeek) {
                 position.setValue(player.getCurrentPosition());
-                //Log.e("MUSIC","UpdateSeekBar run =");
+                //Log.e(MediaUtils.LOG_TAG,"UpdateSeekBar run =");
             }
             if (timeOff.getValue()>0){
                 timeOff.setValue(timeOff.getValue()-1);

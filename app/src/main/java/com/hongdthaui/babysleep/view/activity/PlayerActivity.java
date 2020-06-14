@@ -16,6 +16,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityPlayerBinding;
 import com.hongdthaui.babysleep.viewmodel.PlayerViewModel;
@@ -111,10 +112,10 @@ public class PlayerActivity extends AppCompatActivity {
                 playerViewModel.onChangedAlarm(integer);
             }
         });
-        playerViewModel.getMusicService().getIconSong().observe(this, new Observer<Integer>() {
+        playerViewModel.getMusicService().getIconSong().observe(this, new Observer<String>() {
             @Override
-            public void onChanged(Integer integer) {
-                playerViewModel.onChangedIcon(integer);
+            public void onChanged(String iconUrl) {
+                playerViewModel.onChangedIcon(iconUrl);
             }
         });
     }

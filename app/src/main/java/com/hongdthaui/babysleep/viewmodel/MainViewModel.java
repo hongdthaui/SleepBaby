@@ -1,13 +1,10 @@
 package com.hongdthaui.babysleep.viewmodel;
 
-import android.animation.ObjectAnimator;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
-import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -16,28 +13,34 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.hongdthaui.babysleep.R;
 
-import com.hongdthaui.babysleep.model.Song;
-import com.hongdthaui.babysleep.model.SongData;
+import com.hongdthaui.babysleep.firebase.FirebaseQuery;
+import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.service.MusicService;
+import com.hongdthaui.babysleep.utils.MediaUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainViewModel extends AndroidViewModel {
     public static MusicService MUSIC_SERVICE;
     private Context context;
 
-    private List<Song> songList;
-    private LiveData<List<Song>> northList;
-    private LiveData<List<Song>> southList;
-    private LiveData<List<Song>> wordlessList;
+    private List<SongOnline> songList;
+    private MutableLiveData<List<SongOnline>> northList = new MutableLiveData<>();
+    private MutableLiveData<List<SongOnline>> southList =  new MutableLiveData<>();
+    private MutableLiveData<List<SongOnline>> wordlessList =  new MutableLiveData<>();
 
     private boolean bound = false;
     private boolean isPlay = false;
@@ -51,7 +54,6 @@ public class MainViewModel extends AndroidViewModel {
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
 
-    //private Handler threadHandler = new Handler();
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -67,13 +69,75 @@ public class MainViewModel extends AndroidViewModel {
     };
     public MainViewModel(@NonNull Application application) {
         super(application);
-        Log.e("MUSIC","new MusicViewModel");
-        context = application.getApplicationContext();
-        northList = SongData.getNorthList(context);
-        southList = SongData.getSouthList(context);
-        wordlessList = SongData.getWordlessList(context);
+        //Log.e("MUSIC","new MusicViewModel");
+        getNorthSongList();
+        getSouthSongList();
+        getWordlessSongList();
     }
 
+    private void getNorthSongList() {
+        FirebaseQuery.getNorthSongList(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
+                    };
+                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
+                    if (objectHashMap != null) {
+                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
+                       northList.setValue(songOnlineList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void getSouthSongList() {
+        FirebaseQuery.getSouthSongList(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
+                    };
+                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
+                    if (objectHashMap != null) {
+                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
+                        southList.setValue(songOnlineList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void getWordlessSongList() {
+        FirebaseQuery.getWordlessSongList(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
+                    };
+                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
+                    if (objectHashMap != null) {
+                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
+                        wordlessList.setValue(songOnlineList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     public void onPlay(int index) {
         MUSIC_SERVICE.setIndexSong(index);
         MUSIC_SERVICE.playSong();
@@ -123,7 +187,7 @@ public class MainViewModel extends AndroidViewModel {
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (isSeek) {
             MUSIC_SERVICE.seek(progress);
-            txtCurTime.set(Song.convertTime(progress));
+            txtCurTime.set(MediaUtils.convertTime(progress));
         }
     }
 
@@ -150,26 +214,26 @@ public class MainViewModel extends AndroidViewModel {
     }
     public void onChangedDuration(Integer integer) {
         maxSeekBar.set(integer);
-        txtMaxTime.set(Song.convertTime(integer));
+        txtMaxTime.set(MediaUtils.convertTime(integer));
     }
 
     public void onChangedPosition(Integer integer) {
         progressSeekBar.set(integer);
-        txtCurTime.set(Song.convertTime(integer));
+        txtCurTime.set(MediaUtils.convertTime(integer));
     }
-    public LiveData<List<Song>> getNorthList() {
+    public LiveData<List<SongOnline>> getNorthList() {
         return northList;
     }
 
-    public LiveData<List<Song>> getSouthList() {
+    public LiveData<List<SongOnline>> getSouthList() {
         return southList;
     }
 
-    public LiveData<List<Song>> getWordlessList() {
+    public LiveData<List<SongOnline>> getWordlessList() {
         return wordlessList;
     }
 
-    public void setSongList(List<Song> songList) {
+    public void setSongList(List<SongOnline> songList) {
         this.songList = songList;
         MUSIC_SERVICE.setListSong(songList);
     }

@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
@@ -43,9 +44,9 @@ public class WordlessFragment extends Fragment {
         rvWordlessList.setAdapter(songAdapter);
         rvWordlessList.setLayoutManager(linearLayoutManager);
 
-        activity.getViewModel().getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
+        activity.getViewModel().getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
             @Override
-            public void onChanged(List<Song> songs) {
+            public void onChanged(List<SongOnline> songs) {
                 songAdapter.setSongList(songs);
                 songAdapter.notifyDataSetChanged();
             }

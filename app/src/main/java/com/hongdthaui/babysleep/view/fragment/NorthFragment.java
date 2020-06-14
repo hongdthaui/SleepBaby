@@ -13,13 +13,22 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+import com.hongdthaui.babysleep.firebase.FirebaseQuery;
+import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class NorthFragment extends Fragment {
@@ -48,9 +57,9 @@ public class NorthFragment extends Fragment {
         rvNorthList.setAdapter(songAdapter);
         rvNorthList.setLayoutManager(linearLayoutManager);
 
-        activity.getViewModel().getNorthList().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
+       activity.getViewModel().getNorthList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
             @Override
-            public void onChanged(List<Song> songs) {
+            public void onChanged(List<SongOnline> songs) {
                 songAdapter.setSongList(songs);
                 songAdapter.notifyDataSetChanged();
             }
