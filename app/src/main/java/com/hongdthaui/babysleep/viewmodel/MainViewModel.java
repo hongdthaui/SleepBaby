@@ -44,12 +44,11 @@ public class MainViewModel extends AndroidViewModel {
     private MutableLiveData<List<SongOnline>> wordlessList =  new MutableLiveData<>();
 
     private boolean bound = false;
-    private boolean isPlay = false;
     private boolean isSeek = false;
 
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
     public ObservableInt resRepeat = new ObservableInt(R.drawable.ib_repeat_disable);
-    public ObservableInt resPlay = new ObservableInt(android.R.drawable.ic_media_play);
+    public ObservableBoolean isPlaying = new ObservableBoolean(false);
     public ObservableInt progressSeekBar = new ObservableInt(0);
     public ObservableInt maxSeekBar = new ObservableInt(0);
     public ObservableField<String> txtCurTime = new ObservableField<>();
@@ -71,7 +70,7 @@ public class MainViewModel extends AndroidViewModel {
     };
     public MainViewModel(@NonNull Application application) {
         super(application);
-        //Log.e("MUSIC","new MusicViewModel");
+        context = getApplication().getApplicationContext();
         getNorthSongList();
         getSouthSongList();
         getWordlessSongList();
@@ -134,7 +133,6 @@ public class MainViewModel extends AndroidViewModel {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -151,13 +149,9 @@ public class MainViewModel extends AndroidViewModel {
             Toast.makeText(context, R.string.notice_no_song, Toast.LENGTH_LONG).show();
             return;
         }
-        if (!isPlay) {
-            //isPlay = true;
-            //resPlay.set(android.R.drawable.ic_media_pause);
+        if (!isPlaying.get()) {
             MUSIC_SERVICE.go();
         } else {
-            //isPlay = false;
-            //resPlay.set(android.R.drawable.ic_media_play);
             MUSIC_SERVICE.pausePlayer();
         }
 
@@ -183,9 +177,6 @@ public class MainViewModel extends AndroidViewModel {
     public void onClickRepeat() {
         MUSIC_SERVICE.setRepeat();
     }
-    public void onClickControl(){
-
-    }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (isSeek) {
@@ -203,8 +194,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void onChangedPlay(Boolean aBoolean) {
-        isPlay = aBoolean;
-        resPlay.set(aBoolean?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play);
+        isPlaying.set(aBoolean);
     }
 
     public void onChangedRepeat(Boolean aBoolean) {

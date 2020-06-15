@@ -143,7 +143,7 @@
                     android:background="@drawable/button"
                     android:onClick="@{()->playerViewModel.onClickPlay()}"
                     android:scaleType="fitCenter"
-                    app:imageResource="@{playerViewModel.resPlay}"
+                    app:imageResource="@{playerViewModel.isPlaying?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
