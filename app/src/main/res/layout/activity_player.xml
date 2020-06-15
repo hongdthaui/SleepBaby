@@ -18,7 +18,7 @@
         tools:context=".view.activity.PlayerActivity">
 
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/activity_player_iv_moon"
             android:layout_width="150dp"
             android:layout_height="150dp"
