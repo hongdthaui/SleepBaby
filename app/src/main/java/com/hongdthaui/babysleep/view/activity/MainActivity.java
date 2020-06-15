@@ -38,11 +38,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private Boolean firstPlay = true;
     private Intent intent;
-    private LinearLayout llControl;
 
 
 
@@ -50,21 +47,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        activityMainBinding.setViewModel(viewModel);
-
-        llControl = findViewById(R.id.activity_main_ll_control);
-        viewPager = findViewById(R.id.activity_main_viewPager);
-        tabLayout = findViewById(R.id.activity_main_tabLayout);
+        mainBinding.setViewModel(viewModel);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getApplicationContext());
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        mainBinding.activityMainViewPager.setAdapter(pagerAdapter);
+        mainBinding.activityMainTabLayout.setupWithViewPager(mainBinding.activityMainViewPager);
 
-        llControl.setOnClickListener(new View.OnClickListener() {
+        mainBinding.activityMainLlControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (firstPlay){
@@ -124,10 +117,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (intent == null) {
-            //Log.e("MUSIC SERVICE", "Playing...");
             intent = new Intent(MainActivity.this, MusicService.class);
             bindService(intent, viewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
-            //startService(intent);
         }
     }
 
