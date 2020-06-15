@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.hongdthaui.babysleep.viewmodel.MainViewModel" />
@@ -45,7 +45,6 @@
                     android:id="@+id/activity_main_tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"
                     app:tabGravity="fill"
                     app:tabTextColor="#ffffff">
 
@@ -73,6 +72,15 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             </androidx.viewpager.widget.ViewPager>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_anchor="@+id/activity_main_viewPager"
+                app:layout_anchorGravity="center"
+                android:visibility="@{viewModel.isLoading?View.VISIBLE:View.GONE}"/>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
@@ -53,6 +54,7 @@ public class MainViewModel extends AndroidViewModel {
     public ObservableInt maxSeekBar = new ObservableInt(0);
     public ObservableField<String> txtCurTime = new ObservableField<>();
     public ObservableField<String> txtMaxTime = new ObservableField<>();
+    public ObservableBoolean isLoading = new ObservableBoolean(true);
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -86,6 +88,7 @@ public class MainViewModel extends AndroidViewModel {
                     if (objectHashMap != null) {
                         List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
                        northList.setValue(songOnlineList);
+                       isLoading.set(false);
                     }
                 }
             }
