@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Application;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.utils.MediaUtils;
+import com.hongdthaui.babysleep.view.activity.PlayerActivity;
 
 
 import java.util.Calendar;
@@ -37,7 +39,6 @@ import static com.hongdthaui.babysleep.viewmodel.MainViewModel.MUSIC_SERVICE;
  * Created by hongdthaui on 6/6/2020.
  */
 public class PlayerViewModel extends AndroidViewModel {
-
     private boolean isSeek = false;
 
     public ObservableInt resShuffle = new ObservableInt(R.drawable.ib_shuffle_disable);
@@ -50,6 +51,7 @@ public class PlayerViewModel extends AndroidViewModel {
     public ObservableField<String> txtMaxTime = new ObservableField<>();
     public ObservableField<String> txtAlarm = new ObservableField<>();
     private ObjectAnimator aniMoon;
+
     public PlayerViewModel(@NonNull Application application) {
         super(application);
     }
@@ -92,25 +94,27 @@ public class PlayerViewModel extends AndroidViewModel {
     public void onStopTrackingTouch(SeekBar seekBar) {
         isSeek = false;
     }
-    public void onClickAlarm(int second){
-        getMusicService().setTimeOff(second);
-        Toast.makeText(getApplication().getApplicationContext(),R.string.alarm_setup_success,Toast.LENGTH_LONG).show();
+
+    public void onClickAlarm(int second) {
+        if (second>0)
+            getMusicService().setTimeOff(second);
     }
+
     public void onChangedPlay(Boolean aBoolean) {
         isPlaying.set(aBoolean);
-        if (aBoolean){
+        if (aBoolean) {
             if (aniMoon.isPaused()) {
                 aniMoon.resume();
             } else {
                 aniMoon.start();
             }
-        }else {
+        } else {
             aniMoon.pause();
         }
     }
 
     public void onChangedRepeat(Boolean aBoolean) {
-        resRepeat.set(aBoolean?R.drawable.ib_repeat_enable:R.drawable.ib_repeat_disable);
+        resRepeat.set(aBoolean ? R.drawable.ib_repeat_enable : R.drawable.ib_repeat_disable);
 
     }
 
@@ -127,12 +131,13 @@ public class PlayerViewModel extends AndroidViewModel {
         progressSeekBar.set(integer);
         txtCurTime.set(MediaUtils.convertTime(integer));
     }
+
     public MusicService getMusicService() {
         return MUSIC_SERVICE;
     }
 
     public void onChangedAlarm(Integer integer) {
-        txtAlarm.set(MediaUtils.convertTime(integer*1000));
+        txtAlarm.set(MediaUtils.convertTime(integer * 1000));
     }
 
     public void onChangedIcon(String iconUrl) {
@@ -140,11 +145,12 @@ public class PlayerViewModel extends AndroidViewModel {
     }
 
     @BindingAdapter("resMoon")
-    public static void loadIconMoon(ImageView view, ObservableField<String> resMoon){
-       Glide.with(view.getContext())
+    public static void loadIconMoon(ImageView view, ObservableField<String> resMoon) {
+        Glide.with(view.getContext())
                 .load(resMoon.get())
                 .into(view);
     }
+
     public void setAniMoon(ObjectAnimator aniMoon) {
         this.aniMoon = aniMoon;
     }

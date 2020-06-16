@@ -39,9 +39,6 @@ public class MainViewModel extends AndroidViewModel {
     private Context context;
 
     private List<SongOnline> songList;
-    private MutableLiveData<List<SongOnline>> northList = new MutableLiveData<>();
-    private MutableLiveData<List<SongOnline>> southList =  new MutableLiveData<>();
-    private MutableLiveData<List<SongOnline>> wordlessList =  new MutableLiveData<>();
 
     private boolean bound = false;
     private boolean isSeek = false;
@@ -70,75 +67,12 @@ public class MainViewModel extends AndroidViewModel {
     };
     public MainViewModel(@NonNull Application application) {
         super(application);
-        context = getApplication().getApplicationContext();
-        getNorthSongList();
-        getSouthSongList();
-        getWordlessSongList();
+        context = application.getApplicationContext();
     }
 
-    private void getNorthSongList() {
-        FirebaseQuery.getNorthSongList(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
-                    };
-                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
-                    if (objectHashMap != null) {
-                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
-                       northList.setValue(songOnlineList);
-                       isLoading.set(false);
-                    }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
-    private void getSouthSongList() {
-        FirebaseQuery.getSouthSongList(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
-                    };
-                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
-                    if (objectHashMap != null) {
-                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
-                        southList.setValue(songOnlineList);
-                    }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-    private void getWordlessSongList() {
-        FirebaseQuery.getWordlessSongList(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
-                    };
-                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
-                    if (objectHashMap != null) {
-                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
-                        wordlessList.setValue(songOnlineList);
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
     public void onPlay(int index) {
         MUSIC_SERVICE.setIndexSong(index);
         MUSIC_SERVICE.playSong();
@@ -213,17 +147,6 @@ public class MainViewModel extends AndroidViewModel {
     public void onChangedPosition(Integer integer) {
         progressSeekBar.set(integer);
         txtCurTime.set(MediaUtils.convertTime(integer));
-    }
-    public LiveData<List<SongOnline>> getNorthList() {
-        return northList;
-    }
-
-    public LiveData<List<SongOnline>> getSouthList() {
-        return southList;
-    }
-
-    public LiveData<List<SongOnline>> getWordlessList() {
-        return wordlessList;
     }
 
     public void setSongList(List<SongOnline> songList) {

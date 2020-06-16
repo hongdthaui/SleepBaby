@@ -7,22 +7,28 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hongdthaui.babysleep.databinding.FragmentWordlessBinding;
 import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
+import com.hongdthaui.babysleep.viewmodel.WorldlessViewModel;
 
 import java.util.List;
 
 public class WordlessFragment extends Fragment {
-    private RecyclerView rvWordlessList;
+    private WorldlessViewModel viewModel;
+    private FragmentWordlessBinding binding;
+
     public WordlessFragment(){
 
     }
@@ -30,7 +36,10 @@ public class WordlessFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_wordless,container,false);
+        viewModel = ViewModelProviders.of(this).get(WorldlessViewModel.class);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_wordless,container,false);
+        binding.setViewModel(viewModel);
+        return binding.getRoot();
     }
 
     @Override
@@ -40,18 +49,18 @@ public class WordlessFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter();
 
-        rvWordlessList = view.findViewById(R.id.fragment_wordless_rv);
-        rvWordlessList.setAdapter(songAdapter);
-        rvWordlessList.setLayoutManager(linearLayoutManager);
 
-        activity.getViewModel().getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
+        binding.fragmentWordlessRv.setAdapter(songAdapter);
+        binding.fragmentWordlessRv.setLayoutManager(linearLayoutManager);
+
+        viewModel.getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
             @Override
             public void onChanged(List<SongOnline> songs) {
                 songAdapter.setSongList(songs);
                 songAdapter.notifyDataSetChanged();
             }
         });
-        ItemClickSupport.addTo(rvWordlessList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.addTo(binding.fragmentWordlessRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 activity.onPlay(position,songAdapter.getSongList());

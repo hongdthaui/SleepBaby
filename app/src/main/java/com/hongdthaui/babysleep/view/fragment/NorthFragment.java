@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.hongdthaui.babysleep.databinding.FragmentNorthBinding;
 import com.hongdthaui.babysleep.firebase.FirebaseQuery;
 import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
@@ -24,6 +28,7 @@ import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
+import com.hongdthaui.babysleep.viewmodel.NorthViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +37,8 @@ import java.util.Map;
 
 
 public class NorthFragment extends Fragment {
-    private RecyclerView rvNorthList;
+    private NorthViewModel viewModel;
+    private FragmentNorthBinding binding;
     public NorthFragment() {
 
     }
@@ -40,7 +46,10 @@ public class NorthFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_north, container, false);
+        viewModel = ViewModelProviders.of(this).get(NorthViewModel.class);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_north,container,false);
+        binding.setViewModel(viewModel);
+        return binding.getRoot();
     }
 
 
@@ -53,11 +62,10 @@ public class NorthFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter();
 
-        rvNorthList = view.findViewById(R.id.fragment_north_rv);
-        rvNorthList.setAdapter(songAdapter);
-        rvNorthList.setLayoutManager(linearLayoutManager);
+        binding.fragmentNorthRv.setAdapter(songAdapter);
+        binding.fragmentNorthRv.setLayoutManager(linearLayoutManager);
 
-       activity.getViewModel().getNorthList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
+        viewModel.getNorthList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
             @Override
             public void onChanged(List<SongOnline> songs) {
                 songAdapter.setSongList(songs);
@@ -65,7 +73,7 @@ public class NorthFragment extends Fragment {
             }
         });
 
-        ItemClickSupport.addTo(rvNorthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.addTo(binding.fragmentNorthRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 activity.onPlay(position,songAdapter.getSongList());

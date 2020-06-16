@@ -6,22 +6,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hongdthaui.babysleep.databinding.FragmentSouthBinding;
 import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
+import com.hongdthaui.babysleep.viewmodel.SouthViewModel;
 
 import java.util.List;
 
 public class SouthFragment extends Fragment {
-    private RecyclerView rvSouthList;
+    private SouthViewModel viewModel;
+    FragmentSouthBinding binding;
     public SouthFragment(){
 
     }
@@ -29,7 +34,10 @@ public class SouthFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_south,container,false);
+        viewModel = ViewModelProviders.of(this).get(SouthViewModel.class);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_south,container,false);
+        binding.setViewModel(viewModel);
+        return binding.getRoot();
     }
 
     @Override
@@ -39,18 +47,17 @@ public class SouthFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         final SongAdapter songAdapter = new SongAdapter();
 
-        rvSouthList = view.findViewById(R.id.fragment_south_rv);
-        rvSouthList.setAdapter(songAdapter);
-        rvSouthList.setLayoutManager(linearLayoutManager);
+        binding.fragmentSouthRv.setAdapter(songAdapter);
+        binding.fragmentSouthRv.setLayoutManager(linearLayoutManager);
 
-        activity.getViewModel().getSouthList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
+        viewModel.getSouthList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
             @Override
             public void onChanged(List<SongOnline> songs) {
                 songAdapter.setSongList(songs);
                 songAdapter.notifyDataSetChanged();
             }
         });
-        ItemClickSupport.addTo(rvSouthList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.addTo(binding.fragmentSouthRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 activity.onPlay(position,songAdapter.getSongList());
