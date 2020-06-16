@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@color/colorGray"/>
+        android:drawable="@drawable/bg_sky"/>
     <item
         android:drawable="@mipmap/ic_launcher"
         android:gravity="center">
