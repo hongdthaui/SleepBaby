@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class FirebaseQuery {
     public static String NORTH_SONG = "NorthSong";
+    public static String CENTRAL_SONG = "CentralSong";
     public static String SOUTH_SONG = "SouthSong";
     public static String WORDLESS_SONG = "WordlessSong";
 
@@ -27,6 +28,12 @@ public class FirebaseQuery {
     public static void getWordlessSongList(ValueEventListener valueEventListener){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference(WORDLESS_SONG);
+        databaseReference.addValueEventListener(valueEventListener);
+    }
+
+    public static void getCentralSongList(ValueEventListener valueEventListener) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference(CENTRAL_SONG);
         databaseReference.addValueEventListener(valueEventListener);
     }
 }

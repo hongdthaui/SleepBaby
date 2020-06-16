@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.hongdthaui.babysleep.R;
+import com.hongdthaui.babysleep.view.fragment.CentralFragment;
 import com.hongdthaui.babysleep.view.fragment.NorthFragment;
 import com.hongdthaui.babysleep.view.fragment.SouthFragment;
 import com.hongdthaui.babysleep.view.fragment.WordlessFragment;
@@ -29,9 +30,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new NorthFragment();
                 break;
             case 1:
-                fragment = new SouthFragment();
+                fragment = new CentralFragment();
                 break;
             case 2:
+                fragment = new SouthFragment();
+                break;
+            case 3:
                 fragment = new WordlessFragment();
                 break;
         }
@@ -40,7 +44,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
     @Nullable
     @Override
@@ -55,6 +59,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 break;
             case 2:
                 title = context.getString(R.string.tab_3);
+                break;
+            case 3:
+                title = context.getString(R.string.tab_4);
                 break;
         }
         return title;
