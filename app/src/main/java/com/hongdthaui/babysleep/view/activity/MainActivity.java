@@ -38,6 +38,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
+    ActivityMainBinding mainBinding;
     private Boolean firstPlay = true;
     private Intent intent;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.activityMainViewPager.setAdapter(pagerAdapter);
         mainBinding.activityMainTabLayout.setupWithViewPager(mainBinding.activityMainViewPager);
 
+        mainBinding.activityMainLlControl.setVisibility(View.GONE);
         mainBinding.activityMainLlControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void onPlay(int curSong, List<SongOnline> songList){
+
         viewModel.setSongList(songList);
         viewModel.onPlay(curSong);
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
         if (firstPlay){
+            mainBinding.activityMainLlControl.setVisibility(View.VISIBLE);
             setUpListener();
             firstPlay = false;
         }
