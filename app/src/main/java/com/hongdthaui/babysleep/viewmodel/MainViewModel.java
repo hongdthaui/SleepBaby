@@ -28,8 +28,6 @@ public class MainViewModel extends AndroidViewModel {
     public static MusicService MUSIC_SERVICE;
     private Context context;
 
-    private List<Song> songList;
-
     private boolean bound = false;
     private boolean isSeek = false;
 
@@ -69,10 +67,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void onClickPlay() {
-        if (songList == null) {
-            Toast.makeText(context, R.string.notice_no_song, Toast.LENGTH_LONG).show();
-            return;
-        }
         if (!isPlaying.get()) {
             MUSIC_SERVICE.go();
         } else {
@@ -81,16 +75,10 @@ public class MainViewModel extends AndroidViewModel {
 
     }
     public void onClickPrev() {
-        if (songList == null) {
-            return;
-        }
         MUSIC_SERVICE.playPrev();
     }
 
     public void onClickNext() {
-        if (songList == null) {
-            return;
-        }
         MUSIC_SERVICE.playNext();
     }
 
@@ -140,7 +128,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setSongList(List<Song> songList) {
-        this.songList = songList;
         MUSIC_SERVICE.setListSong(songList);
     }
 

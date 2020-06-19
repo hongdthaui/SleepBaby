@@ -15,12 +15,9 @@ import android.widget.Toast;
 
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
-import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.viewmodel.MainViewModel;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
@@ -57,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void onPlay(int curSong, List<Song> songList){
+    public void onPlay(int curSong){
 
-        viewModel.setSongList(songList);
         viewModel.onPlay(curSong);
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);

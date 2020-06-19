@@ -65,7 +65,7 @@ public class NorthFragment extends Fragment {
         ItemClickSupport.addTo(binding.fragmentNorthRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                activity.onPlay(position,songAdapter.getSongList());
+                activity.onPlay(position);
             }
         });
 

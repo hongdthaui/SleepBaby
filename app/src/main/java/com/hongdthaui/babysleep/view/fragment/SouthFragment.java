@@ -59,7 +59,7 @@ public class SouthFragment extends Fragment {
         ItemClickSupport.addTo(binding.fragmentSouthRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                activity.onPlay(position,songAdapter.getSongList());
+                activity.onPlay(position);
             }
         });
     }
