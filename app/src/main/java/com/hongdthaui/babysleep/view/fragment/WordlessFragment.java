@@ -62,7 +62,7 @@ public class WordlessFragment extends Fragment {
         ItemClickSupport.addTo(binding.fragmentWordlessRv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                activity.onPlay(position);
+                activity.onPlay(position,songAdapter.getSongList());
             }
         });
     }
