@@ -15,10 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hongdthaui.babysleep.databinding.FragmentWordlessBinding;
-import com.hongdthaui.babysleep.model.SongOnline;
+import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.R;
-import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.viewmodel.WorldlessViewModel;
@@ -53,9 +52,9 @@ public class WordlessFragment extends Fragment {
         binding.fragmentWordlessRv.setAdapter(songAdapter);
         binding.fragmentWordlessRv.setLayoutManager(linearLayoutManager);
 
-        viewModel.getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
+        viewModel.getWordlessList().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
             @Override
-            public void onChanged(List<SongOnline> songs) {
+            public void onChanged(List<Song> songs) {
                 songAdapter.setSongList(songs);
                 songAdapter.notifyDataSetChanged();
             }

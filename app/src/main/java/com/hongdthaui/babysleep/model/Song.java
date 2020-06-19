@@ -6,11 +6,32 @@ import android.net.Uri;
 
 
 public class Song {
-    public String name;
-    public String singer;
-    public String timeStr;
-
+    private String name;
+    private String singer;
+    private String timeStr;
+    private String iconUrl;
+    private String audioUrl;
 
     public Song() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSinger() {
+        return singer;
+    }
+
+    public String getTimeStr() {
+        return timeStr;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public String getAudioUrl() {
+        return audioUrl;
     }
 }

@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="song"
-            type="com.hongdthaui.babysleep.model.SongOnline" />
+            name="viewModel"
+            type="com.hongdthaui.babysleep.viewmodel.SongItemViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:layout_width="@dimen/image_width_song_icon"
         android:layout_height="@dimen/image_height_song_icon"
         android:layout_margin="5dp"
-        bind:iconUrl="@{song.iconUrl}"
+        bind:iconUrl="@{viewModel.iconUrl}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +29,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="@{song.name}"
+        android:text="@{viewModel.name}"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/text_size_song_name"
         android:textStyle="normal"
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="@{song.singer}"
+        android:text="@{viewModel.singer}"
         android:textColor="#DFDEDE"
         android:textSize="@dimen/text_size_singer"
         app:layout_constraintBottom_toBottomOf="@+id/item_song_iv_icon"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:text="@{song.timeStr}"
+        android:text="@{viewModel.timeStr}"
         android:textColor="#DFDEDE"
         android:textSize="@dimen/text_size_singer"
         app:layout_constraintBottom_toBottomOf="@+id/item_song_tv_singer"

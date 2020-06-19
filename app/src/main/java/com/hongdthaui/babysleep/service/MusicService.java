@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -15,17 +14,15 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hongdthaui.babysleep.model.Song;
-import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.utils.MediaUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
     private MediaPlayer player;
-    private List<SongOnline> listSong;
+    private List<Song> listSong;
     private int indexSong;
     private IBinder binder = new MusicBinder();
     private MutableLiveData<Boolean> playing = new MutableLiveData<>();
@@ -92,7 +89,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
 
-    public void setListSong(List<SongOnline> songs) {
+    public void setListSong(List<Song> songs) {
         this.listSong = songs;
     }
 
@@ -103,10 +100,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void playSong() {
         player.reset();
         //Log.i(MediaUtils.LOG_TAG, "songPosn=" + songPosn);
-        SongOnline playSong = listSong.get(indexSong);
-        iconSong.setValue(playSong.iconUrl);
+        Song playSong = listSong.get(indexSong);
+        iconSong.setValue(playSong.getIconUrl());
         try {
-            player.setDataSource(playSong.audioUrl);
+            player.setDataSource(playSong.getAudioUrl());
         } catch (IOException e) {
             Log.e(MediaUtils.LOG_TAG, "Error setting data source", e);
         }

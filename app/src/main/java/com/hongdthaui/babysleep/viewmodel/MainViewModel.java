@@ -14,31 +14,21 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 import com.hongdthaui.babysleep.R;
 
-import com.hongdthaui.babysleep.firebase.FirebaseQuery;
-import com.hongdthaui.babysleep.model.SongOnline;
+import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.utils.MediaUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainViewModel extends AndroidViewModel {
     public static MusicService MUSIC_SERVICE;
     private Context context;
 
-    private List<SongOnline> songList;
+    private List<Song> songList;
 
     private boolean bound = false;
     private boolean isSeek = false;
@@ -149,7 +139,7 @@ public class MainViewModel extends AndroidViewModel {
         txtCurTime.set(MediaUtils.convertTime(integer));
     }
 
-    public void setSongList(List<SongOnline> songList) {
+    public void setSongList(List<Song> songList) {
         this.songList = songList;
         MUSIC_SERVICE.setListSong(songList);
     }

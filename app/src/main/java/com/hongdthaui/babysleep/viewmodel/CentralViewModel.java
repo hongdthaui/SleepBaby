@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.hongdthaui.babysleep.firebase.FirebaseQuery;
-import com.hongdthaui.babysleep.model.SongOnline;
+import com.hongdthaui.babysleep.model.Song;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Map;
  * Created by hongdthaui on 6/16/2020.
  */
 public class CentralViewModel extends AndroidViewModel {
-    private MutableLiveData<List<SongOnline>> centralList;
+    private MutableLiveData<List<Song>> centralList;
     public ObservableBoolean isLoading = new ObservableBoolean(true);
 
     public CentralViewModel(@NonNull Application application) {
@@ -37,11 +37,11 @@ public class CentralViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    GenericTypeIndicator<HashMap<String, SongOnline>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, SongOnline>>() {
+                    GenericTypeIndicator<HashMap<String, Song>> objectsGTypeInd = new GenericTypeIndicator<HashMap<String, Song>>() {
                     };
-                    Map<String, SongOnline> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
+                    Map<String, Song> objectHashMap = dataSnapshot.getValue(objectsGTypeInd);
                     if (objectHashMap != null) {
-                        List<SongOnline> songOnlineList = new ArrayList<>(objectHashMap.values());
+                        List<Song> songOnlineList = new ArrayList<>(objectHashMap.values());
                         centralList.setValue(songOnlineList);
                         isLoading.set(false);
                     }
@@ -55,7 +55,7 @@ public class CentralViewModel extends AndroidViewModel {
         });
     }
 
-    public MutableLiveData<List<SongOnline>> getCentralList() {
+    public MutableLiveData<List<Song>> getCentralList() {
         return centralList;
     }
 }

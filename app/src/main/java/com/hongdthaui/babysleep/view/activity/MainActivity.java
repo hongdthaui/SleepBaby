@@ -1,39 +1,25 @@
 package com.hongdthaui.babysleep.view.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.Toast;
 
 
-import com.google.android.material.tabs.TabLayout;
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.ActivityMainBinding;
 import com.hongdthaui.babysleep.model.Song;
-import com.hongdthaui.babysleep.model.SongOnline;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.view.adapter.PagerAdapter;
 import com.hongdthaui.babysleep.viewmodel.MainViewModel;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void onPlay(int curSong, List<SongOnline> songList){
+    public void onPlay(int curSong, List<Song> songList){
 
         viewModel.setSongList(songList);
         viewModel.onPlay(curSong);

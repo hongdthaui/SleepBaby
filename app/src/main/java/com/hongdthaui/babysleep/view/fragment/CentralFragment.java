@@ -10,19 +10,17 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.databinding.FragmentCentralBinding;
-import com.hongdthaui.babysleep.model.SongOnline;
+import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.utils.ItemClickSupport;
 import com.hongdthaui.babysleep.view.activity.MainActivity;
 import com.hongdthaui.babysleep.view.adapter.SongAdapter;
 import com.hongdthaui.babysleep.viewmodel.CentralViewModel;
-import com.hongdthaui.babysleep.viewmodel.MainViewModel;
 
 import java.util.List;
 
@@ -53,9 +51,9 @@ public class CentralFragment extends Fragment {
         binding.fragmentCentralRv.setAdapter(songAdapter);
         binding.fragmentCentralRv.setLayoutManager(linearLayoutManager);
 
-        viewModel.getCentralList().observe(getViewLifecycleOwner(), new Observer<List<SongOnline>>() {
+        viewModel.getCentralList().observe(getViewLifecycleOwner(), new Observer<List<Song>>() {
             @Override
-            public void onChanged(List<SongOnline> songOnlines) {
+            public void onChanged(List<Song> songOnlines) {
                 songAdapter.setSongList(songOnlines);
                 songAdapter.notifyDataSetChanged();
             }
