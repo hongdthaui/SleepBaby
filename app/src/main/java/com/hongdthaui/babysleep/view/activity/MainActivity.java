@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.activityMainViewPager.setAdapter(pagerAdapter);
         mainBinding.activityMainTabLayout.setupWithViewPager(mainBinding.activityMainViewPager);
 
-        mainBinding.activityMainLlControl.setVisibility(View.GONE);
-        mainBinding.activityMainLlControl.setOnClickListener(new View.OnClickListener() {
+        //mainBinding.activityMainLlControl.setVisibility(View.GONE);
+/*        mainBinding.activityMainLlControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (firstPlay){
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
     public void onPlay(int curSong, List<Song> songList){
         viewModel.setSongList(songList);

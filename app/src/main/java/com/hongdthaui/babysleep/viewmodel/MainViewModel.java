@@ -3,8 +3,10 @@ package com.hongdthaui.babysleep.viewmodel;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.hongdthaui.babysleep.R;
 import com.hongdthaui.babysleep.model.Song;
 import com.hongdthaui.babysleep.service.MusicService;
 import com.hongdthaui.babysleep.utils.MediaUtils;
+import com.hongdthaui.babysleep.view.activity.PlayerActivity;
 
 import java.util.List;
 
@@ -90,6 +93,10 @@ public class MainViewModel extends AndroidViewModel {
         MUSIC_SERVICE.setRepeat();
     }
 
+    public void onClickControl(View view){
+        Intent intent = new Intent(view.getContext(), PlayerActivity.class);
+        view.getContext().startActivity(intent);
+    }
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (isSeek) {
             MUSIC_SERVICE.seek(progress);
